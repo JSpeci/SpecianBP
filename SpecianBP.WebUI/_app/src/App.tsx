@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react'
+import { AppHeader } from './Components/AppHeader';
 
 export interface AppProps {
 
@@ -11,7 +12,7 @@ export class App extends React.Component<AppProps> {
     console.log("Rendering APP");
     return (
       <div className="container">
-        HELLOasdasdasdas
+        <AppHeader />
       </div>
     );
   }

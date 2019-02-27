@@ -270,6 +270,8 @@ cache/
 cache
 *.cache
 
+package-lock.json
+
 # Visual Studio 6 build log
 *.plg
 
