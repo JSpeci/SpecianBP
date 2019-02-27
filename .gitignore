@@ -264,10 +264,11 @@ FakesAssemblies/
 node_modules/
 
 # cache
+*.cache/
 .cache/
 cache/
 cache
-.cache
+*.cache
 
 # Visual Studio 6 build log
 *.plg

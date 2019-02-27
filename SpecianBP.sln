@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecianBP.WebUI", "WebUI\SpecianBP.WebUI.csproj", "{DA372B4C-189C-426F-8846-848B58CD2AF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecianBP.WebUI", "SpecianBP.WebUI\SpecianBP.WebUI.csproj", "{DA372B4C-189C-426F-8846-848B58CD2AF3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecianBP", "SpecianBP\SpecianBP.csproj", "{D7AD12C3-CA92-4999-8A91-CFFD0D931F4A}"
 EndProject
