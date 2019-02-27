@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ApiRequest } from 'utils/ApiRequest';
 
 export interface AppHeaderProps {
 
@@ -6,11 +7,18 @@ export interface AppHeaderProps {
 
 export class AppHeader extends React.Component<AppHeaderProps> {
     render() {
-      return (
-        <div className="header">
-            
-        </div>
-      );
+
+        const apiReq: ApiRequest = new ApiRequest("");
+
+        let data = apiReq.getValues();
+
+
+        console.log(data);
+
+        return (
+            <div className="header">
+
+            </div>
+        );
     }
-  }
-  
+}
