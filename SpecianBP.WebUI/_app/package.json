@@ -10,7 +10,7 @@
     "popper.js": "^1.14.7",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts-ts": "3.1.0",
+    "react-scripts-ts": "3.1.0"
   },
   "scripts": {
     "start": "parcel watch --out-dir ./wwwroot/dist ./_app/src/index.tsx",
