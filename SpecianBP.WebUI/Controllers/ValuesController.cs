@@ -28,9 +28,9 @@ namespace SpecianBP.WebUI.Controllers
 
         // GET api/values
         [HttpGet("Power")]
-        public ActionResult<IEnumerable<Power>> Get([FromBody] DateTime from, [FromBody] DateTime to)
+        public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to)
         {       
-            if(from == null)
+            if(from.Year != 2018 || to.Year != 2018)
             {
                 from = defaultValuesFrom;
                 to = defaultValuesTo;
@@ -45,8 +45,8 @@ namespace SpecianBP.WebUI.Controllers
 
 
         // GET api/values
-        [HttpGet("PowerSingleSeries")]
-        public ActionResult<IEnumerable<Power>> Get([FromBody] DateTime from, [FromBody] DateTime to, string seriesName)
+        [HttpGet("PowerSingleSeries/{seriesName}")]
+        public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromQuery] string SeriesName)
         {
             if (from == null)
             {
@@ -57,6 +57,7 @@ namespace SpecianBP.WebUI.Controllers
             IEnumerable<Power> powers = _dbService.Power
                 .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
                 .OrderBy(i => i.TimeLocal)
+                .Select(i => (Power) i.GetType().GetProperty(SeriesName).GetValue(SeriesName, null))
                 .ToList();
             return Ok(powers);
         }
