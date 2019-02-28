@@ -11,8 +11,6 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-scripts-ts": "3.1.0",
-    "src": "^1.1.2",
-    "utils": "^0.3.1"
   },
   "scripts": {
     "start": "parcel watch --out-dir ./wwwroot/dist ./_app/src/index.tsx",

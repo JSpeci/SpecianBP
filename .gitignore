@@ -270,6 +270,10 @@ cache/
 cache
 *.cache
 
+# bootstrap
+
+bootstrap/
+
 package-lock.json
 
 # Visual Studio 6 build log
