@@ -270,10 +270,19 @@ cache/
 cache
 *.cache
 
+
+*.wwwroot/
+.wwwroot/
+wwwroot/
+wwwroot
+*.wwwroot
+
 # bootstrap
 
 bootstrap/
 
+index.js
+index.map
 package-lock.json
 
 # Visual Studio 6 build log
