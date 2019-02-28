@@ -26229,7 +26229,7 @@ process.chdir = function (dir) {
 process.umask = function () {
   return 0;
 };
-},{}],"../../../../../../node_modules/mobx/lib/mobx.module.js":[function(require,module,exports) {
+},{}],"../node_modules/mobx/lib/mobx.module.js":[function(require,module,exports) {
 var process = require("process");
 var global = arguments[3];
 "use strict";
@@ -32711,7 +32711,47 @@ if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "undefined" ? "undefined" : _typeo
 
   __MOBX_DEVTOOLS_GLOBAL_HOOK__.injectMobxReact(mobxReact, mobx);
 }
-},{"mobx":"../../../../../../node_modules/mobx/lib/mobx.module.js","react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js"}],"Components/AppHeader.tsx":[function(require,module,exports) {
+},{"mobx":"../node_modules/mobx/lib/mobx.module.js","react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js"}],"utils/ApiRequest.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ApiRequest = void 0;
+
+//helper object
+var ApiRequest =
+/** @class */
+function () {
+  function ApiRequest(url) {
+    this.url = url;
+  }
+
+  ApiRequest.prototype.getHeaders = function () {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json"); //myHeaders.set("Authorization", "Bearer " + (window as any).restDriverAccessToken);
+
+    return myHeaders;
+  };
+
+  ApiRequest.prototype.getValues = function () {
+    var myHeaders = this.getHeaders();
+    var myInit = {
+      method: 'GET',
+      headers: myHeaders
+    };
+    return fetch('/api/Values', myInit).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      return data;
+    });
+  };
+
+  return ApiRequest;
+}();
+
+exports.ApiRequest = ApiRequest;
+},{}],"Components/AppHeader.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32723,6 +32763,12 @@ var tslib_1 = _interopRequireWildcard(require("tslib"));
 
 var React = _interopRequireWildcard(require("react"));
 
+var _ApiRequest = require("../utils/ApiRequest");
+
+var _mobx = require("mobx");
+
+var _mobxReact = require("mobx-react");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 var AppHeader =
@@ -32730,21 +32776,67 @@ var AppHeader =
 function (_super) {
   tslib_1.__extends(AppHeader, _super);
 
-  function AppHeader() {
-    return _super !== null && _super.apply(this, arguments) || this;
+  function AppHeader(props) {
+    var _this = _super.call(this, props) || this;
+
+    _this.apiReq = new _ApiRequest.ApiRequest("https://localhost:44340");
+    _this.loading = false;
+
+    _this.load();
+
+    return _this;
   }
 
-  AppHeader.prototype.render = function () {
-    return React.createElement("div", {
-      className: "header"
+  AppHeader.prototype.load = function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
+      var _this = this;
+
+      return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            this.loading = true;
+            return [4
+            /*yield*/
+            , this.apiReq.getValues().then(function (data) {
+              _this.data = data;
+            })];
+
+          case 1:
+            _a.sent();
+
+            this.loading = false;
+            return [2
+            /*return*/
+            ];
+        }
+      });
     });
   };
 
+  AppHeader.prototype.render = function () {
+    if (this.data) {
+      console.log(this.data);
+    }
+
+    return React.createElement("div", {
+      className: "header"
+    }, this.data ? this.data.map(function (i) {
+      return React.createElement("span", {
+        key: i
+      }, i);
+    }) : "");
+  };
+
+  tslib_1.__decorate([_mobx.observable], AppHeader.prototype, "loading", void 0);
+
+  tslib_1.__decorate([_mobx.observable], AppHeader.prototype, "data", void 0);
+
+  AppHeader = tslib_1.__decorate([_mobxReact.observer], AppHeader);
   return AppHeader;
 }(React.Component);
 
 exports.AppHeader = AppHeader;
-},{"tslib":"../node_modules/tslib/tslib.es6.js","react":"../node_modules/react/index.js"}],"App.tsx":[function(require,module,exports) {
+},{"tslib":"../node_modules/tslib/tslib.es6.js","react":"../node_modules/react/index.js","../utils/ApiRequest":"utils/ApiRequest.tsx","mobx":"../node_modules/mobx/lib/mobx.module.js","mobx-react":"../node_modules/mobx-react/index.module.js"}],"App.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32824,7 +32916,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52585" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53695" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
