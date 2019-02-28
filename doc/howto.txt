@@ -1,0 +1,4 @@
+﻿
+# to run bundler, must be in WebUi folder
+
+parcel watch --out-dir ./wwwroot ./_app/src/index.tsx
