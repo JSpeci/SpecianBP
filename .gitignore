@@ -271,15 +271,19 @@ cache
 *.cache
 
 
-*.wwwroot/
-.wwwroot/
-wwwroot/
-wwwroot
-*.wwwroot
+*.wwwroot/index.js
+.wwwroot/index.js
+wwwroot/index.js
+
+*.wwwroot/index.map
+.wwwroot/index.map
+wwwroot/index.map
 
 # bootstrap
 
 bootstrap/
+*.bootstrap/
+bootstrap
 
 index.js
 index.map
