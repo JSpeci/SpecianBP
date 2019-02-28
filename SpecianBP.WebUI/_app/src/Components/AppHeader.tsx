@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ApiRequest } from '../utils/ApiRequest'
-import { observable, flow } from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 export interface AppHeaderProps {
