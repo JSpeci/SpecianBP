@@ -17,7 +17,7 @@ namespace SpecianBP.Api
 
         public override string ToString()
         {
-            return $"{SeriesName} {Time} {Value}";
+            return $"{SeriesName} {Value} {Time} ";
         }
     }
 }

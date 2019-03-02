@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SpecianBP.Api;
 using SpecianBP.Db;
 using SpecianBP.Entities;
 
@@ -10,7 +11,7 @@ namespace SpecianBP.WebUI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class PowerContoller : ControllerBase
     {
         protected readonly DbService _dbService;
 
@@ -18,7 +19,7 @@ namespace SpecianBP.WebUI.Controllers
         public readonly DateTime defaultValuesTo = new DateTime(2018, 4, 30);
 
 
-        public ValuesController(DbService context)
+        public PowerContoller(DbService context)
         {
             _dbService = context;
         }
@@ -29,8 +30,8 @@ namespace SpecianBP.WebUI.Controllers
         // GET api/values
         [HttpGet("Power")]
         public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to)
-        {       
-            if(from.Year != 2018 || to.Year != 2018)
+        {
+            if (from.Year != 2018 || to.Year != 2018)
             {
                 from = defaultValuesFrom;
                 to = defaultValuesTo;
@@ -44,6 +45,7 @@ namespace SpecianBP.WebUI.Controllers
         }
 
 
+
         // GET api/values
         [HttpGet("PowerSingleSeries")]
         public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] string SeriesName)
@@ -54,14 +56,21 @@ namespace SpecianBP.WebUI.Controllers
                 to = defaultValuesTo;
             }
 
+
             var powers = _dbService.Power
                 .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
                 .OrderBy(i => i.TimeLocal)
-                .Select(i => i.GetType().GetProperty(SeriesName))
+                .Select(i => new { time = i.TimeLocal, value = i.GetType().GetProperty(SeriesName).GetValue(i, null) })
                 .ToList();
 
-            ;
-            return Ok(powers);
+            var result = new List<TimeValuePairDto>();
+
+            foreach(var p in powers)
+            {
+                result.Add(new TimeValuePairDto(p.time, (float) p.value, SeriesName));
+            }
+
+            return Ok(result);
         }
     }
 }
