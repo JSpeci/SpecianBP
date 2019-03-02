@@ -44,6 +44,34 @@ namespace SpecianBP.WebUI.Controllers
             return Ok(powers);
         }
 
+        /// <summary>
+        /// Divides range by step, and all values in each interval averages.
+        /// </summary>
+        // GET api/values
+        [HttpGet("PowerSingleSeries")]
+        public ActionResult<IEnumerable<Power>> GetAvergaed([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] TimeSpan step, [FromHeader] string SeriesName)
+        {
+            if (from == null)
+            {
+                from = defaultValuesFrom;
+                to = defaultValuesTo;
+            }
+
+            var powers = _dbService.Power
+                .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
+                .OrderBy(i => i.TimeLocal)
+                .Select(i => new { time = i.TimeLocal, value = i.GetType().GetProperty(SeriesName).GetValue(i, null) })
+                .ToList();
+
+            var result = new List<TimeValuePairDto>();
+
+            foreach (var p in powers)
+            {
+                result.Add(new TimeValuePairDto(p.time, (float)p.value, SeriesName));
+            }
+
+            return Ok(result);
+        }
 
 
         // GET api/values
