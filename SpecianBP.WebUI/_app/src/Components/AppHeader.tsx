@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ApiRequest } from '../utils/ApiRequest'
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { AveragedParameters, SeriesAveraged } from 'utils/interfaces';
 
 export interface AppHeaderProps {
 
@@ -12,7 +13,7 @@ export class AppHeader extends React.Component<AppHeaderProps> {
 
     @observable loading: boolean;
     apiReq: ApiRequest = new ApiRequest("https://localhost:44340");
-    @observable data: string[];
+    @observable data: SeriesAveraged[];
 
     constructor(props: AppHeaderProps) {
         super(props);
@@ -22,25 +23,42 @@ export class AppHeader extends React.Component<AppHeaderProps> {
 
     async load() {
         this.loading = true;
-        await this.apiReq.getValues().then(data => { this.data = data });
+
+        const params: AveragedParameters = {
+            from: "2018-04-01 00:00:22.0000000",
+            to: "2018-04-01 12:20:22.0000000",
+            seriesName: "S_avg_S3_C",
+            step: "02:00:00.000",
+        };
+
+        await this.apiReq.getAveragedPowerFromTo(params).then(d => { this.data = d; });
         this.loading = false;
     }
 
     render() {
 
-        if (this.data) {
+
+        if (this.data && !this.loading) {
             console.log(this.data);
         }
+
         return (
             <div className="header">
+                <ul>
+                    {
+                        this.data && !this.loading
+                            ? this.data.map(i => {
+                                return (
+                                <li>{i.fromTime} {i.averageValue}</li>
+                                );
+                            })
+                            : ""
+                    }
+                </ul>
                 {
-                    this.data 
-                    ? this.data.map(i => {
-                        return (
-                            <span key={i}>{i}</span>
-                        );
-                    })
-                    : ""
+                    this.loading
+                        ? <h1>Loading</h1>
+                        : ""
                 }
             </div>
         );

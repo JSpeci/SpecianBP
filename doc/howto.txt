@@ -2,3 +2,9 @@
 # to run bundler, must be in WebUi folder
 
 parcel watch --out-dir ./wwwroot ./_app/src/index.tsx
+
+
+
+notes, how was developed : 
+
+https://stackoverflow.com/questions/4121993/how-to-run-a-py-python-file-in-asp-net

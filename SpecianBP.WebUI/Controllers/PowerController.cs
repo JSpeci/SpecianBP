@@ -51,24 +51,24 @@ namespace SpecianBP.WebUI.Controllers
         /// </summary>
         // GET api/values
         [HttpGet("SingleSeriesAveraged")]
-        public ActionResult<IEnumerable<Power>> GetAvergaed([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] TimeSpan step, [FromHeader] string SeriesName)
+        public ActionResult<IEnumerable<Power>> GetAvergaed([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] TimeSpan Step, [FromHeader] string SeriesName)
         {
-            if (from == null)
+            if (From == null)
             {
-                from = defaultValuesFrom;
-                to = defaultValuesTo;
+                From = defaultValuesFrom;
+                To = defaultValuesTo;
             }
 
             var powers = _dbService.Power
-                .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
+                .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
                 .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                 .ToList();
 
             // divide
 
-            DateTime intervalSart = from;
-            DateTime intervalEnd = from + step;
+            DateTime intervalSart = From;
+            DateTime intervalEnd = From + Step;
 
             List<List<TimeValuePairDto>> grouped = new List<List<TimeValuePairDto>>();
             var result = new List<SeriesAveragedDto>();
@@ -86,17 +86,17 @@ namespace SpecianBP.WebUI.Controllers
                 averaged.MaxValue = group.Select(i => i.Value).Max();
                 result.Add(averaged);
                 intervalSart = intervalEnd;
-                if (intervalEnd + step  > to && !lastPart)
+                if (intervalEnd + Step  > To && !lastPart)
                 {
-                    intervalEnd = to;
+                    intervalEnd = To;
                     lastPart = true;
                 }
                 else
                 {
-                    intervalEnd = intervalEnd + step;
+                    intervalEnd = intervalEnd + Step;
                 }
                 
-            } while (intervalEnd < (to + step) || !lastPart);
+            } while (intervalEnd < (To + Step) || !lastPart);
 
             return Ok(result);
         }

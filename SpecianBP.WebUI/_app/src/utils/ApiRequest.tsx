@@ -1,3 +1,4 @@
+import { SeriesAveraged, AveragedParameters } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -26,6 +27,26 @@ export class ApiRequest {
 
         return fetch('/api/Values', myInit).then((response) => {
 
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
+    getAveragedPowerFromTo(params: AveragedParameters): Promise<SeriesAveraged[]> {
+
+        const myHeaders = this.getHeaders();
+        myHeaders.append("From", params.from);
+        myHeaders.append("To", params.to);
+        myHeaders.append("Step", params.step);
+        myHeaders.append("SeriesName", params.seriesName);
+
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/Power/SingleSeriesAveraged', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;
