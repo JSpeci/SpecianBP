@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SpecianBP.Api;
+using SpecianBP.Api.Dto;
 using SpecianBP.Db;
 using SpecianBP.Entities;
 
@@ -11,7 +13,7 @@ namespace SpecianBP.WebUI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PowerContoller : ControllerBase
+    public class PowerController : ControllerBase
     {
         protected readonly DbService _dbService;
 
@@ -19,7 +21,7 @@ namespace SpecianBP.WebUI.Controllers
         public readonly DateTime defaultValuesTo = new DateTime(2018, 4, 30);
 
 
-        public PowerContoller(DbService context)
+        public PowerController(DbService context)
         {
             _dbService = context;
         }
@@ -48,7 +50,7 @@ namespace SpecianBP.WebUI.Controllers
         /// Divides range by step, and all values in each interval averages.
         /// </summary>
         // GET api/values
-        [HttpGet("PowerSingleSeries")]
+        [HttpGet("SingleSeriesAveraged")]
         public ActionResult<IEnumerable<Power>> GetAvergaed([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] TimeSpan step, [FromHeader] string SeriesName)
         {
             if (from == null)
@@ -60,22 +62,48 @@ namespace SpecianBP.WebUI.Controllers
             var powers = _dbService.Power
                 .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
                 .OrderBy(i => i.TimeLocal)
-                .Select(i => new { time = i.TimeLocal, value = i.GetType().GetProperty(SeriesName).GetValue(i, null) })
+                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                 .ToList();
 
-            var result = new List<TimeValuePairDto>();
+            // divide
 
-            foreach (var p in powers)
+            DateTime intervalSart = from;
+            DateTime intervalEnd = from + step;
+
+            List<List<TimeValuePairDto>> grouped = new List<List<TimeValuePairDto>>();
+            var result = new List<SeriesAveragedDto>();
+            bool lastPart = false;
+            do
             {
-                result.Add(new TimeValuePairDto(p.time, (float)p.value, SeriesName));
-            }
+                var group = powers.Where(i => i.Time >= intervalSart && i.Time <= intervalEnd).ToList();
+                grouped.Add(group);
+                SeriesAveragedDto averaged = new SeriesAveragedDto();
+                averaged.FromTime = intervalSart;
+                averaged.ToTime = intervalEnd;
+                averaged.AverageValue = group.Select(i => i.Value).Average();
+                averaged.SeriesName = SeriesName;
+                averaged.MinValue = group.Select(i => i.Value).Min();
+                averaged.MaxValue = group.Select(i => i.Value).Max();
+                result.Add(averaged);
+                intervalSart = intervalEnd;
+                if (intervalEnd + step  > to && !lastPart)
+                {
+                    intervalEnd = to;
+                    lastPart = true;
+                }
+                else
+                {
+                    intervalEnd = intervalEnd + step;
+                }
+                
+            } while (intervalEnd < (to + step) || !lastPart);
 
             return Ok(result);
         }
 
 
         // GET api/values
-        [HttpGet("PowerSingleSeries")]
+        [HttpGet("SingleSeries")]
         public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] string SeriesName)
         {
             if (from == null)
@@ -93,9 +121,9 @@ namespace SpecianBP.WebUI.Controllers
 
             var result = new List<TimeValuePairDto>();
 
-            foreach(var p in powers)
+            foreach (var p in powers)
             {
-                result.Add(new TimeValuePairDto(p.time, (float) p.value, SeriesName));
+                result.Add(new TimeValuePairDto(p.time, (float)p.value, SeriesName));
             }
 
             return Ok(result);

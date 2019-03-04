@@ -15,8 +15,13 @@ namespace SpecianBP.Api
             SeriesName = seriesName;
         }
 
-        public override string ToString()
+        public TimeValuePairDto()
         {
+
+        }
+
+        public override string ToString()
+        {   
             return $"{SeriesName} {Value} {Time} ";
         }
     }
