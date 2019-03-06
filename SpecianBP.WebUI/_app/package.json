@@ -23,7 +23,8 @@
     "react-widgets": "^4.4.10",
     "react-widgets-globalize": "^5.0.19",
     "react-widgets-moment": "^4.0.26",
-    "react-widgets-moment-localizer": "^1.0.2"
+    "react-widgets-moment-localizer": "^1.0.2",
+    "utils": "^0.3.1"
   },
   "scripts": {
     "start": "parcel watch --out-dir ./wwwroot/dist ./_app/src/index.tsx",

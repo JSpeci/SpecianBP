@@ -3,51 +3,49 @@ import { observer } from 'mobx-react';
 import { DateTimePicker } from 'react-widgets'
 import momentLocalizer from 'react-widgets-moment';
 import 'react-widgets/dist/css/react-widgets.css';
+import { DashboardModel } from 'Models/DashboardModel';
 
-
-export interface DataSettingsProps {
-
-
+export interface SourceDataSettingsProps {
+    model: DashboardModel
 }
 
 @observer
-export class DataSettings extends React.Component<DataSettingsProps> {
+export class SourceDataSettings extends React.Component<SourceDataSettingsProps> {
 
     newName: string = "";
-    date: Date = new Date();
 
-    okButtonClicked() {
-
+    constructor(props: SourceDataSettingsProps) {
+        super(props);
     }
 
-    dateTimeChanged = (s: any) => this.date = s;
-
-
     render() {
-        momentLocalizer()
+
+        const model = this.props.model;
+
+        momentLocalizer();
         return (
             <div className="dataSettings">
                 <div className="card-body">
-                    <div className="newResKeyForm">
+                    <div className="dataSettingsForm">
                         <h5 >Set up dashboard</h5>
-                        <div className="form-group">
+                        <div className="form-group settingsItem">
                             <label>From</label>
                             <DateTimePicker
-                                value={this.date}
-                                defaultValue={new Date()}
+                                value={model.dateFrom}
                                 time={true}
+                                onChange={model.fromChanged}
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group settingsItem">
                             <label>To</label>
                             <DateTimePicker
-                                value={this.date}
-                                defaultValue={new Date()}
+                                value={model.dateTo}
                                 time={true}
+                                onChange={model.toChanged}
                             />
                         </div>
-                        <div className="form-group ">
-                            <button className="btn btn-success inline-button" onClick={() => this.okButtonClicked()} type="button">Show !</button >
+                        <div className="form-group settingsItem">
+                            <button className="btn btn-success inline-button" onClick={model.fromToConfirmed} type="button">Show !</button >
                         </div>
                     </div>
                 </div>

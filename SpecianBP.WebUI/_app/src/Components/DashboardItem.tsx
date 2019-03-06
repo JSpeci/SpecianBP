@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
+import { DashboardItemModel } from 'Models/DashboardItemModel';
 
 
 export interface DashboardItemProps {
     name: string;
+    model?: DashboardItemModel;
 }
 
 @observer
