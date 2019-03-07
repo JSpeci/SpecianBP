@@ -12,16 +12,25 @@ export interface DashboardProps {
 export class Dashboard extends React.Component<DashboardProps> {
 
     render() {
+        const model = this.props.dashboardModel;
+        console.log(model.loading);
         return (
             <div className="dashboard">
                 <div className="dashboardHeader">
                     <SourceDataSettings model={this.props.dashboardModel} />
                 </div>
-                <div className="dashboardBody">
-                    <DashboardItem name="first"/>
-                    {/* <DashboardItem name="second" />
-                    <DashboardItem name="third" /> */}
-                </div>
+
+                {
+                    model.canShowCharts &&
+                    <div className="dashboardBody">
+                        <DashboardItem name="first" model={model.itemModels[0]} />
+                        {/* <DashboardItem name="second" />
+    <DashboardItem name="third" /> */}
+                    </div>
+                }
+
+
+
             </div>
         );
     }

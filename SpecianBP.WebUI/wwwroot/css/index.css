@@ -65,3 +65,8 @@
 .settingsItem .btn {
     margin-top: -5px;
 }
+
+.loading{
+    font-weight: bold;
+    color: cornflowerblue;
+}
