@@ -1,65 +1,19 @@
 import * as React from 'react'
-import { ApiRequest } from '../utils/ApiRequest'
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { AveragedParameters, SeriesAveraged } from 'utils/interfaces';
 
 export interface AppHeaderProps {
 
 }
 
-@observer
 export class AppHeader extends React.Component<AppHeaderProps> {
 
-    @observable loading: boolean;
-    apiReq: ApiRequest = new ApiRequest("https://localhost:44340");
-    @observable data: SeriesAveraged[];
-
-    constructor(props: AppHeaderProps) {
-        super(props);
-        this.loading = false;
-        this.load();
-    }
-
-    async load() {
-        this.loading = true;
-
-        const params: AveragedParameters = {
-            from: "2018-04-01 00:00:22.0000000",
-            to: "2018-04-01 12:20:22.0000000",
-            seriesName: "S_avg_S3_C",
-            step: "02:00:00.000",
-        };
-
-        await this.apiReq.getAveragedPowerFromTo(params).then(d => { this.data = d; });
-        this.loading = false;
-    }
-
-    render() {
-
-
-        if (this.data && !this.loading) {
-            console.log(this.data);
-        }
+     render() {
 
         return (
             <div className="header">
-                <ul>
-                    {
-                        this.data && !this.loading
-                            ? this.data.map(i => {
-                                return (
-                                <li>{i.fromTime} {i.averageValue}</li>
-                                );
-                            })
-                            : ""
-                    }
-                </ul>
-                {
-                    this.loading
-                        ? <h1>Loading</h1>
-                        : ""
-                }
+                <div className="logo"></div>
+                <div className="headerBody">
+                    <span>Welcome on dashboard</span>
+                </div>
             </div>
         );
     }

@@ -76,17 +76,20 @@ namespace SpecianBP.WebUI.Controllers
             do
             {
                 var group = powers.Where(i => i.Time >= intervalSart && i.Time <= intervalEnd).ToList();
-                grouped.Add(group);
-                SeriesAveragedDto averaged = new SeriesAveragedDto();
-                averaged.FromTime = intervalSart;
-                averaged.ToTime = intervalEnd;
-                averaged.AverageValue = group.Select(i => i.Value).Average();
-                averaged.SeriesName = SeriesName;
-                averaged.MinValue = group.Select(i => i.Value).Min();
-                averaged.MaxValue = group.Select(i => i.Value).Max();
-                result.Add(averaged);
-                intervalSart = intervalEnd;
-                if (intervalEnd + Step  > To && !lastPart)
+                if(group.Count() > 0)
+                {
+                    grouped.Add(group);
+                    SeriesAveragedDto averaged = new SeriesAveragedDto();
+                    averaged.FromTime = intervalSart;
+                    averaged.ToTime = intervalEnd;
+                    averaged.AverageValue = group.Select(i => i.Value).Average();
+                    averaged.SeriesName = SeriesName;
+                    averaged.MinValue = group.Select(i => i.Value).Min();
+                    averaged.MaxValue = group.Select(i => i.Value).Max();
+                    result.Add(averaged);
+                    intervalSart = intervalEnd;
+                }
+                if (intervalEnd + Step > To && !lastPart)
                 {
                     intervalEnd = To;
                     lastPart = true;
@@ -95,7 +98,6 @@ namespace SpecianBP.WebUI.Controllers
                 {
                     intervalEnd = intervalEnd + Step;
                 }
-                
             } while (intervalEnd < (To + Step) || !lastPart);
 
             return Ok(result);

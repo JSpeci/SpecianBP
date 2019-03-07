@@ -1,0 +1,52 @@
+    @observable loading: boolean;
+    apiReq: ApiRequest = new ApiRequest("https://localhost:44340");
+    @observable data: SeriesAveraged[];
+
+    constructor(props: DashboardProps) {
+        super(props);
+        this.loading = false;
+        this.load();
+    }
+
+    async load() {
+        this.loading = true;
+
+        const params: AveragedParameters = {
+            from: "2018-04-01 00:00:22.0000000",
+            to: "2018-04-01 12:20:22.0000000",
+            seriesName: "S_avg_S3_C",
+            step: "02:00:00.000",
+        };
+
+        await this.apiReq.getAveragedPowerFromTo(params).then(d => { this.data = d; });
+        this.loading = false;
+    }
+
+    render() {
+
+
+        if (this.data && !this.loading) {
+            console.log(this.data);
+        }
+
+        return (
+            <div className="header">
+                <ul>
+                    {
+                        this.data && !this.loading
+                            ? this.data.map(i => {
+                                return (
+                                <li>{i.fromTime} {i.averageValue}</li>
+                                );
+                            })
+                            : ""
+                    }
+                </ul>
+                {
+                    this.loading
+                        ? <h1>Loading</h1>
+                        : ""
+                }
+            </div>
+        );
+    }

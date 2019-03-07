@@ -1,5 +1,72 @@
+@import 'widgets-css.css';
+
+.container {
+    min-width: 100%;
+    height: 100%;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
 .header{
-    background-color: aqua;
+    display: flex;
+    background-color: aliceblue;
     width: 100%;
-    min-height: 60px;
+    height: 45px;
+    border-bottom: 1px salmon solid;
+}
+
+.header .logo{
+    background-color: aqua;
+    width: 45px;
+    display: inline-block;
+    height: 43px;
+    background-image: url('../img/logo.png');
+    background-repeat: no-repeat;
+}
+
+.header .headerBody{
+    display: inline-block;
+    height: 45px;
+    padding: 3px;
+    margin-left: 13px;
+    padding-top: 7px;
+}
+
+.footer{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    min-height: 25px;
+    display: flex;
+    background-color: aliceblue;
+    border-top: 1px salmon solid;
+    padding: 5px;
+}
+
+.dashboardBody{
+    padding: 3px;
+    /* background-color: #eee; */
+}
+
+.dashboardItem{
+    display: inline-block;
+    min-width: 300px;
+    min-height: 300px;
+    border: 2px solid cornsilk;
+    margin: 3px;
+}
+
+.settingsItem{
+    display: inline-block;
+    max-width: 250px;
+    margin-left: 9px;
+}
+
+.settingsItem .btn {
+    margin-top: -5px;
+}
+
+.loading{
+    font-weight: bold;
+    color: cornflowerblue;
 }
