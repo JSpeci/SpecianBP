@@ -1,8 +1,9 @@
 ﻿
+Většinu času jsem strávil programováním, řešením toho, proč co nejde a jak to napojit.
 
-seznámení se s npm - správce balíčku pro node.js. Správné sestavení, dependencies a založení klientského projektu
+Seznámení se s npm - správce balíčku pro node.js. Správné sestavení, dependencies a založení klientského projektu
 
-seznámení se s parcel bundlerem - překladačem tsx (es6) do index.js souboru.
+seznámení se s parcel bundlerem - překladačem tsx (es6) do index.js souboru, použití, rozběhání.
 
 Migrační projekt
 Migrace dat do ms sql databáze - backup má 1,3 GB. Data od 1.4 do 22.8.2018. Step je 10sekund.
@@ -10,11 +11,12 @@ Zvolil jsem ms sql databázi jako nejjednodušší cestu připojení databáze k
 Migrační projekt má svoje vlastní repo zde: https://github.com/JSpeci/CeaDataImport 
 Knihovny poskytnuté ke čtení .cea filu jsou spustitelné pouze v .net frameworku 4.6.1.,
 proto DataImport není subprojekt hlavního projektu.
+Nyní si do databáze naimportuju i tabulku Units, jelikož neobsahuje jednotky.
 
 První krok byla analýza archivu - jaká data v nich mám. Rozhodl jsem se je rozdělit do několika entit (Current,Voltage,Power,Status,Temperature), aby datová řada nebyla jedna velká nepřehledná entita s 300 atributy. Entity obsahují atributy pojmenované stejně, jako v konkrétních .cea archivech.
 Každá entita má Time: DateTime, Id: Guid. A pak definované atributy. Keré jsem vykopíroval ručně - vygeneroval jsem jejich jména a typ do txt souboru (https://github.com/JSpeci/CeaDataImport/blob/master/Translations.veliciny4-2018.txt)
-a pak podle něj vytvořil kód entit. Tento krok byl jediný manuální.
-Pokud by bylo , lze přejít na archiv s jiným složením a opět ho migrovat do databáze.
+a pak podle něj vytvořil entity. Tento krok byl jediný manuální.
+Pokud by bylo potřeba , lze přejít na archiv s jiným složením a opět ho migrovat do databáze.
 Samotná migrace spočívá v generování sql bulk insert pomocí SqlClient knihovny.
 Odladěná migrace zabrala přibližně hodinu. Nyní mám fullbackup, který můžu jakkoliv zmenšovat, omezovat.
 Entity můžete prohlédnout v hlavním repozitáři aplikace
@@ -22,16 +24,47 @@ Repozitář hlavní aplikace naleznete zde : https://github.com/JSpeci/SpecianBP
 
 K hlavní aplikaci.
 
-Prokousal jsem se mnoha tutoriály jak ustanovit novou web aplikaci s přidáním vlastní klientské aplikace. Seznámil jsem se s npm - node.js package managerem(dependencies/ dev-dependencies) a jak funguje bundling. K tomu používám parcel bundler - je daleko jednodušší a dá se používat bez složitého konfigurování oproti webpacku. Většinu času jsem strávil řešním toho, proč něco nefunguje jak chci. Hluboká zkušenost. Obvykle jsem přišel k rozjetým projektům. 
+Prokousal jsem se mnoha tutoriály jak ustanovit novou web aplikaci s přidáním vlastní klientské aplikace. Serverovou část - asp.net core webApi project. Seznámil jsem se s npm - node.js package managerem(dependencies/ dev-dependencies) a jak funguje bundling. K tomu používám parcel bundler - je daleko jednodušší a dá se používat bez složitého konfigurování oproti webpacku. Většinu času jsem strávil řešním toho, proč něco nefunguje jak chci. Hluboká zkušenost. Obvykle jsem přišel k rozjetým projektům. 
 
 Asp.net ore 2.1 webAplikace, bez razor views. 
 Default home route vrací klientskou single page aplikaci v React.js + mobX. Používám typescript : typový javascript. VSCode vás nutí všemu řiřadit typ/interface, primitivní, nebo objektový a nutí vás definovat i návratové typy. Tudíž od začátku se to chová jako psaní kódu v C# se správným napovídáním.
 
 
+React
+Jedná se o javascriptovou knihovnu pro tvorbu interaktivních uživatelských rozhraní, převážně single page aplikací. Umožňuje navrhnout interaktivní uživatelské rozhraní a vykreslovat komponenty podle vnitřního stavu aplikace v reálném čase.
+Každá komponenta musí implementovat metodu render(), která na základě vnitřního stavu komponenty vrací to, co se má zobrazit. Dále je důležitý objekt props, zkratka slova properties, který je povinným parametrem pro konstruktor každé komponenty.
+Díky logice založené na jazyce JavaScript bývá obvykle datový model na straně klienta udržován v pomocných objektech, které jsou předávány do komponent jako parametry props. V těchto modelových objektech se volají procedury na načtených datech, či jejich získávání a posílání na serverové api.
+Komponenty lze skládat libovolně, obvykle se každá komponenta skládá z menších a každá má odpovědnost za vykreslení konkrétní části DOM. Po vytvoření celé struktury DOM, se nadále aktualizují pouze ta místa, která hodnotou závisí na props objektu. [3]
+Na ukázce kódu v obrázku č. 1 vidíme jednoduchou komponentu HelloText, která vrátí nadpis s textem, který je předán pomocí props. Dále zastřešující komponentu App2, která jí používá a předává jí hodnotu „Dobrý den komponento“. Výsledkem tohoto kódu je nadpis s vloženým textem.
+
+TypeScript
+Jedná se o nadstavbu jazyka JavaScript. Nabízí statickou typovou kontrolu pro primitiva, třídy, rozhraní, návratové typy metod apod. Jeho použití výrazně ulehčuje vývoj. Na úrovni vývojového prostředí ihned signalizuje typovou nekompatibilitu a možné chyby, nabízí možnost navigace k definici. Dále usnadňuje refaktorování kódu. [5]
+Pokud voláme například REST služby, které nám vracejí data ve formátu JSON, neznáme jejich schéma. Poté co s těmito daty pracujeme, musíme mít jejich strukturu v hlavě. Definujeme-li rozhraní v TypeScriptu, které popisuje, jaké má objekt vlastnosti a jakého jsou typu, značně si ulehčíme práci, ladění a zamezíme mnoha chybám.
+Na obrázku č. 2 použití spočívá v definování typu za dvojtečkou u atributů. U komponent lze definovat rozhraní pro props ve špičatých závorkách.
+
+Parcel
+Parcel lze použít bez další konfigurace na sestavení aplikace do jednoho souboru index.js, který je jako jediný importován do kořenového souboru index.html. Šetří čas při vývoji aplikace, kdy sám sleduje změny ve zdrojových souborech a aktualizuje sestavenou webovou aplikaci a soubor index.js. Alternativou může být například webpack, či browserify, které jsou vhodné pro velké projekty. [6]
+Použil jsem watch režim, kdy bundler reaguje na změny v souborech a ihned atomaticky kompiluje, tudíž v prohlížeci se objeví změny ihned po Ctrl+S ve vývojovém prostředí. Já používám VS Code.
+Pro release pro nasazení do produkce stačí zavolat parcel build, který do finálního index.js souboru dependency packages podle souboru package.json. DevDependencies, kterými je právě typescript, typovost pro jiné balíčky, než je react, či pomocné devTools.
+Ještě je vhondé zmínit soubor package-lock.json, který obsahuje verze použitých balíčků. Nejčastěji využitý,při návratu k projektu po delší době.
 
 
+MobX
+MobX je javascriptová knihovna pro management stavu mezi komponentami a modelovými objekty. Nejedná se o stavový kontejner, jako například knihovna Redux. Používá se jako tzv. wrapper nad existujícími komponentami a modely a poskytuje propsání aktuálních hodnot v modelech do komponent a do přímo do zobrazených hodnot v metodě render konkrétní komponenty. MobX je nejčastěji používána ve spojení s knihovnou React. [4]
+Použití spočívá v anotaci @observer nad deklarací komponenty, čímž říkáme, že komponenta bude pozorovatelem všech svých primitivních i objektových parametrů v objektu props, které jsou označeny anotací @observable při deklaraci uvnitř modelových objektů, čímž jsou dekorovány na objekt tohoto typu. Změny takto anotovaných atributů budou ihned viditelné všude, kde jsou čteny libovolnou komponentou anotovanou jako observer. 
+Dále jsou důležitou částí @computed hodnoty, které lze odvodit ze stávajícího stavu, nebo jiných vypočtených hodnot. Chovají se podobně jako vzorce v tabulkách Excel. 
+Na základě definované operace vrací hodnotu podle aktuálního stavu použitých atributů k výpočtu a poskytují vždy aktuální hodnotu.
+Na obrázku č. 3 uvádím jednoduchý model, který při zavolání metody inkrementuje atributy n1 a n2 a poskytuje vypočtenou hodnotu, která je jejich součtem. Zastřešující komponenta App2 čte z modelu vypočtenou hodnotu a celý model předává níže do vnořené komponenty, která volá akce definované na modelu, v tomto případě inkrementování atributů. Vždy je zobrazena aktuální hodnota.
 
 
+Bootstrap
+Jedná se o open-source CSS framework, neboli sadu hotových stylů, které lze snadno použít a ušetřit čas a práci při stylování uživatelského rozhraní webové aplikace oproti stylování od úplného základu. Nabízí mřížku, výchozí typografii, stylování pro formulářové elementy. Tvorba vizuální podoby se tak stává jednoduchým sestavováním vizuálních komponent. Obvyklá praxe je, použití Bootstrapu jako dobrého základu pro vizuální podobu a rozvržení a dále přidáním vlastních stylů se upravuje vzhled podle přesných požadavků a specifik aplikace. Výrazným přínosem tohoto css frameworku pro webové aplikace je vyřešená responzivita uživatelského rozhraní pro malá zařízení [7]
 
+Plotly.js
+Javascriptová knihovna pro 
+
+React Widgets
+
+Moment.js
 
 

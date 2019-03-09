@@ -35,7 +35,7 @@ export class Dashboard extends React.Component<DashboardProps> {
                         {
                             model.itemModels.map(i => {
                                 return (
-                                    <DashboardItem key={i.data[0].averageValue} model={i} />
+                                    <DashboardItem key={Math.random()} model={i} />
                                 );
                             })
                         }
