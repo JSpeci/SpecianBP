@@ -52,4 +52,20 @@ export class ApiRequest {
             return data;
         });
     }
+
+    getPowerSeriesNamesList(): Promise<string[]> {
+
+        const myHeaders = this.getHeaders();
+
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/Power/PowerSeriesNames', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
 }

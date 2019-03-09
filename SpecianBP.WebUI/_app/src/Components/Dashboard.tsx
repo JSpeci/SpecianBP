@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { SourceDataSettings } from './DataSettings';
 import { DashboardItem } from './DashboardItem';
 import { DashboardModel } from 'Models/DashboardModel';
+import { Loading } from './Loading';
 
 export interface DashboardProps {
     dashboardModel: DashboardModel;
@@ -16,21 +17,30 @@ export class Dashboard extends React.Component<DashboardProps> {
         console.log(model.loading);
         return (
             <div className="dashboard">
-                <div className="dashboardHeader">
-                    <SourceDataSettings model={this.props.dashboardModel} />
-                </div>
 
+
+                {
+                    !model.loading && <div className="dashboardHeader">
+                        <SourceDataSettings model={this.props.dashboardModel} />
+                    </div>
+                }
+                {
+                    model.loading && <div className="dashboardHeader">
+                        <Loading />
+                    </div>
+                }
                 {
                     model.canShowCharts &&
                     <div className="dashboardBody">
-                        <DashboardItem name="first" model={model.itemModels[0]} />
-                        {/* <DashboardItem name="second" />
-    <DashboardItem name="third" /> */}
+                        {
+                            model.itemModels.map(i => {
+                                return (
+                                    <DashboardItem key={i.data[0].averageValue} model={i} />
+                                );
+                            })
+                        }
                     </div>
                 }
-
-
-
             </div>
         );
     }

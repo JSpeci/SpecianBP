@@ -54,6 +54,7 @@
     min-height: 300px;
     border: 2px solid cornsilk;
     margin: 3px;
+    margin-left: 25px;
 }
 
 .settingsItem{
@@ -62,11 +63,16 @@
     margin-left: 9px;
 }
 
-.settingsItem .btn {
+.settingsItem .btn, .settingsItem .rw-dropdown-list {
     margin-top: -5px;
 }
 
 .loading{
     font-weight: bold;
+    font-size: larger;
     color: cornflowerblue;
+    margin: auto auto;
+    padding: 13px;
+    width: 100%;
+    text-align: center;
 }

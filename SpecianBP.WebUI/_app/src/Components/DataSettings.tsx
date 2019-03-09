@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
-import { DateTimePicker } from 'react-widgets'
+import { DateTimePicker, DropdownList } from 'react-widgets'
 import momentLocalizer from 'react-widgets-moment';
 import 'react-widgets/dist/css/react-widgets.css';
 import { DashboardModel } from 'Models/DashboardModel';
@@ -11,8 +11,6 @@ export interface SourceDataSettingsProps {
 
 @observer
 export class SourceDataSettings extends React.Component<SourceDataSettingsProps> {
-
-    newName: string = "";
 
     constructor(props: SourceDataSettingsProps) {
         super(props);
@@ -45,7 +43,23 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             />
                         </div>
                         <div className="form-group settingsItem">
-                            <button className="btn btn-success inline-button" onClick={model.fromToConfirmed} type="button">Show !</button >
+                            <label>Series</label>
+                            <DropdownList
+                                data={model.dataSettingsModel.SeriesNames}
+                                defaultValue={model.dataSettingsModel.SeriesNames[0]}
+                                onChange={model.dataSettingsModel.seriesNameChanged}
+                            />
+                        </div>
+                        <div className="form-group settingsItem">
+                            <label>ChartType</label>
+                            <DropdownList
+                                data={model.dataSettingsModel.chartTypes}
+                                defaultValue={"bar"}
+                                onChange={model.dataSettingsModel.chartTypeChanged}
+                            />
+                        </div>
+                        <div className="form-group settingsItem">
+                            <button className="btn btn-success inline-button" onClick={model.AddSeriesChart} type="button">Add !</button >
                         </div>
                     </div>
                 </div>

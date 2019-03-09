@@ -22,8 +22,8 @@ export class DashboardItemModel {
 
     async load(params: AveragedParameters) {
         this.loading = true;
-        await this.apiRequest.getAveragedPowerFromTo(params).then(d => { this.data = d; this.loading = false;});
         this.lastUsedParams = params;
+        await this.apiRequest.getAveragedPowerFromTo(params).then(d => { this.data = d; this.loading = false;});
         this.canShowChart = true;
         
     }
