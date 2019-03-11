@@ -12,6 +12,7 @@ namespace SpecianBP.Api.Dto
         public float MaxValue { get; set; }
         public float MinValue { get; set; }
         public string SeriesName { get; set; }
+        public string Unit { get; set; }
 
         public SeriesAveragedDto()
         {

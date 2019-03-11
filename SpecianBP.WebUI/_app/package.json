@@ -1,16 +1,29 @@
 {
   "name": "my-app",
+  "main": "index.js",
   "version": "0.1.0",
   "private": false,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "cldr-data": "^34.0.0",
+    "globalize": "^1.4.0",
     "jquery": "^3.3.1",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
+    "moment": "^2.24.0",
+    "plotly.js": "^1.45.0",
     "popper.js": "^1.14.7",
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3",
-    "react-scripts-ts": "3.1.0"
+    "react": "^16.8.4",
+    "react-color": "^2.17.0",
+    "react-dom": "^16.8.4",
+    "react-localizer": "^2.1.3",
+    "react-plotly.js": "^2.3.0",
+    "react-scripts-ts": "3.1.0",
+    "react-widgets": "^4.4.10",
+    "react-widgets-globalize": "^5.0.19",
+    "react-widgets-moment": "^4.0.26",
+    "react-widgets-moment-localizer": "^1.0.2",
+    "utils": "^0.3.1"
   },
   "scripts": {
     "start": "parcel watch --out-dir ./wwwroot/dist ./_app/src/index.tsx",
@@ -19,6 +32,10 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/react-color": "^2.14.1",
+    "@types/react-plotly.js": "^2.2.2",
+    "@types/react-widgets": "^4.3.2",
+    "@types/react-widgets-moment": "^4.0.1",
     "@types/jest": "^24.0.9",
     "@types/node": "^11.9.5",
     "@types/react": "^16.8.5",
