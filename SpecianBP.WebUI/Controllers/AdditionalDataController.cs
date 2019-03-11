@@ -22,11 +22,56 @@ namespace SpecianBP.WebUI.Controllers
 
         // GET api/values
         [HttpGet("PowerSeriesNames")]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<string>> GetPowerSeriesNames()
         {
             var names = typeof(Power).GetProperties()
                         .Select(property => property.Name)
                         .ToList();
+
+            var names2 = typeof(Entity).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            names2.Add("TimeLocal"); // ommit time local in requested series names
+
+            var resultNames = names.Except(names2);
+
+            return Ok(resultNames);
+        }
+
+        // GET api/values
+        [HttpGet("AllSeriesNames")]
+        public ActionResult<IEnumerable<string>> GetAllSeriesNames()
+        {
+            var names = typeof(Power).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            names.AddRange(
+            typeof(Voltage).GetProperties()
+                .Select(property => property.Name)
+                .ToList()
+            );
+            names.AddRange(
+            typeof(Current).GetProperties()
+                .Select(property => property.Name)
+                .ToList()
+            );
+            names.AddRange(
+            typeof(Frequency).GetProperties()
+                .Select(property => property.Name)
+                .ToList()
+            );
+            names.AddRange(
+            typeof(Status).GetProperties()
+                .Select(property => property.Name)
+                .ToList()
+            );
+            names.AddRange(
+            typeof(Temperature).GetProperties()
+                .Select(property => property.Name)
+                .ToList()
+            );
 
             var names2 = typeof(Entity).GetProperties()
                         .Select(property => property.Name)

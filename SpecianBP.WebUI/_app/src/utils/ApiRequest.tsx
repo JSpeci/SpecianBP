@@ -46,7 +46,7 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/Power/SingleSeriesAveraged', myInit).then((response) => {
+        return fetch('/api/Series/SingleSeriesAveraged', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;
@@ -62,7 +62,7 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/AdditionalData/PowerSeriesNames', myInit).then((response) => {
+        return fetch('/api/AdditionalData/AllSeriesNames', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

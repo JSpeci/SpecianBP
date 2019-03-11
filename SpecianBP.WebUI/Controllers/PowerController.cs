@@ -18,8 +18,7 @@ namespace SpecianBP.WebUI.Controllers
     {
         protected readonly DbService _dbService;
 
-        public readonly DateTime defaultValuesFrom = new DateTime(2018, 4, 1);
-        public readonly DateTime defaultValuesTo = new DateTime(2018, 4, 30);
+
 
 
         public PowerController(DbService context)
@@ -32,16 +31,16 @@ namespace SpecianBP.WebUI.Controllers
 
         // GET api/values
         [HttpGet("Power")]
-        public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to)
+        public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime From, [FromHeader] DateTime To)
         {
-            if (from.Year != 2018 || to.Year != 2018)
+            if (From.Year != 2018 || To.Year != 2018)
             {
-                from = defaultValuesFrom;
-                to = defaultValuesTo;
+                From = SeriesController.defaultValuesFrom;
+                To = SeriesController.defaultValuesTo;
             }
 
             IEnumerable<Power> powers = _dbService.Power
-                .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
+                .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
                 .ToList();
             return Ok(powers);
@@ -56,8 +55,8 @@ namespace SpecianBP.WebUI.Controllers
         {
             if(From == null)
             {
-                From = defaultValuesFrom;
-                To = defaultValuesTo;
+                From = SeriesController.defaultValuesFrom;
+                To = SeriesController.defaultValuesTo;
             }
 
             var powers = _dbService.Power
@@ -106,17 +105,17 @@ namespace SpecianBP.WebUI.Controllers
 
         // GET api/values
         [HttpGet("SingleSeries")]
-        public ActionResult<IEnumerable<TimeValuePairDto>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] string SeriesName)
+        public ActionResult<IEnumerable<TimeValuePairDto>> Get([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] string SeriesName)
         {
-            if (from == null)
+            if (From == null)
             {
-                from = defaultValuesFrom;
-                to = defaultValuesTo;
+                From = SeriesController.defaultValuesFrom;
+                To = SeriesController.defaultValuesTo;
             }
 
 
             var powers = _dbService.Power
-                .Where(i => i.TimeLocal >= from && i.TimeLocal <= to)
+                .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
                 .Select(i => new { time = i.TimeLocal, value = i.GetType().GetProperty(SeriesName).GetValue(i, null) })
                 .ToList();

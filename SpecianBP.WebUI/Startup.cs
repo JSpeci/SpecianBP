@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SpecianBP.Db;
+using SpecianBP.Services;
 
 namespace WebUI
 {
@@ -34,6 +35,7 @@ namespace WebUI
             });
 
             services.AddDbContext<DbService>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<SeriesService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
