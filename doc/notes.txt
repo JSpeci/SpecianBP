@@ -1,9 +1,7 @@
 ﻿
+Dobrý den, je načase podat nějaký report.
+
 Většinu času jsem strávil programováním, řešením toho, proč co nejde a jak to napojit.
-
-Seznámení se s npm - správce balíčku pro node.js. Správné sestavení, dependencies a založení klientského projektu
-
-seznámení se s parcel bundlerem - překladačem tsx (es6) do index.js souboru, použití, rozběhání.
 
 Migrační projekt
 Migrace dat do ms sql databáze - backup má 1,3 GB. Data od 1.4 do 22.8.2018. Step je 10sekund.
@@ -20,15 +18,18 @@ Pokud by bylo potřeba , lze přejít na archiv s jiným složením a opět ho m
 Samotná migrace spočívá v generování sql bulk insert pomocí SqlClient knihovny.
 Odladěná migrace zabrala přibližně hodinu. Nyní mám fullbackup, který můžu jakkoliv zmenšovat, omezovat.
 Entity můžete prohlédnout v hlavním repozitáři aplikace
-Repozitář hlavní aplikace naleznete zde : https://github.com/JSpeci/SpecianBP
 
 K hlavní aplikaci.
+Repozitář hlavní aplikace naleznete zde : https://github.com/JSpeci/SpecianBP
 
 Prokousal jsem se mnoha tutoriály jak ustanovit novou web aplikaci s přidáním vlastní klientské aplikace. Serverovou část - asp.net core webApi project. Seznámil jsem se s npm - node.js package managerem(dependencies/ dev-dependencies) a jak funguje bundling. K tomu používám parcel bundler - je daleko jednodušší a dá se používat bez složitého konfigurování oproti webpacku. Většinu času jsem strávil řešním toho, proč něco nefunguje jak chci. Hluboká zkušenost. Obvykle jsem přišel k rozjetým projektům. 
 
 Asp.net ore 2.1 webAplikace, bez razor views. 
 Default home route vrací klientskou single page aplikaci v React.js + mobX. Používám typescript : typový javascript. VSCode vás nutí všemu řiřadit typ/interface, primitivní, nebo objektový a nutí vás definovat i návratové typy. Tudíž od začátku se to chová jako psaní kódu v C# se správným napovídáním.
 
+Seznámení se s npm - správce balíčku pro node.js. Správné sestavení, dependencies a založení klientského projektu
+
+seznámení se s parcel bundlerem - překladačem tsx (es6) do index.js souboru, použití, rozběhání.
 
 React
 Jedná se o javascriptovou knihovnu pro tvorbu interaktivních uživatelských rozhraní, převážně single page aplikací. Umožňuje navrhnout interaktivní uživatelské rozhraní a vykreslovat komponenty podle vnitřního stavu aplikace v reálném čase.

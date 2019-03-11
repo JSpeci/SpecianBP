@@ -21,6 +21,17 @@ namespace SpecianBP.Services
             _dbService = context;
         }
 
+        public string GetSeriesUnit(string SeriesName)
+        {
+            var u = _dbService.SeriesUnit.Where(i => i.SeriesName == SeriesName).FirstOrDefault();
+
+            if (u != null)
+            {
+                return u.UnitName;
+            }
+            else return "";
+        }
+
         /// <summary>
         /// Averaging filter on selected data
         /// </summary>
@@ -31,8 +42,14 @@ namespace SpecianBP.Services
         /// <returns></returns>
         public IList GetAveraged(DateTime From, DateTime To, TimeSpan Step, string SeriesName)
         {
+            string seriesUnit = GetSeriesUnit(SeriesName);
             // divide
             var data = resolveType(From, To, SeriesName);
+
+            if(Step == TimeSpan.Zero)
+            {
+                return data.Select(i => new SeriesAveragedDto() { AverageValue = i.Value, FromTime = i.Time, ToTime = i.Time, SeriesName =  SeriesName, Unit = seriesUnit}).ToList();
+            }
 
             if (isStatusType(SeriesName))  //shlould not be averaged boolean parametres
             {
@@ -47,7 +64,7 @@ namespace SpecianBP.Services
                     {
                         d.Value = 0F;
                     }
-                    resultStatuses.Add(new SeriesAveragedDto() { AverageValue = d.Value, FromTime = d.Time, ToTime = d.Time, SeriesName = SeriesName });
+                    resultStatuses.Add(new SeriesAveragedDto() { AverageValue = d.Value, FromTime = d.Time, ToTime = d.Time, SeriesName = SeriesName, Unit = "boolean" });
                 }
                 return resultStatuses;
             }
@@ -71,6 +88,7 @@ namespace SpecianBP.Services
                     averaged.SeriesName = SeriesName;
                     averaged.MinValue = group.Select(i => i.Value).Min();
                     averaged.MaxValue = group.Select(i => i.Value).Max();
+                    averaged.Unit = seriesUnit;
                     result.Add(averaged);
                     intervalSart = intervalEnd;
                 }

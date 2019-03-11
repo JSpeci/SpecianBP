@@ -1,4 +1,4 @@
-import { SeriesAveraged, AveragedParameters } from './interfaces';
+import { SeriesAveraged, PlotParameters } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -33,7 +33,7 @@ export class ApiRequest {
         });
     }
 
-    getAveragedPowerFromTo(params: AveragedParameters): Promise<SeriesAveraged[]> {
+    getAveragedPowerFromTo(params: PlotParameters): Promise<SeriesAveraged[]> {
 
         const myHeaders = this.getHeaders();
         myHeaders.append("From", params.from);
@@ -47,6 +47,22 @@ export class ApiRequest {
         };
 
         return fetch('/api/Series/SingleSeriesAveraged', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
+    exportClicked(): Promise<void> {
+
+        const myHeaders = this.getHeaders();
+
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/Series/Export', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

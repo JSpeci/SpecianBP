@@ -5,15 +5,15 @@ export interface SeriesAveraged {
     maxValue: number;
     minValue: number;
     seriesName: string;
+    unit: string;
 }
 
-export interface AveragedParameters {
+export interface PlotParameters {
     from: any;
     to: any;
     seriesName: string;
     step: any;
     chartProps: ChartProps;
-    lineColor: rgbColor;
 }
 
 export interface TimeValuePair {
@@ -26,6 +26,9 @@ export interface ChartProps {
     type: string;
     xSize: number;
     ySize: number;
+    lineColor: rgbColor;
+    xAxisTitle: string;
+    yAxisTitle: string;
 }
 
 export interface rgbColor{

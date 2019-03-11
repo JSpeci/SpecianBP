@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
-import { AveragedParameters, SeriesAveraged } from 'utils/interfaces';
+import { PlotParameters, SeriesAveraged } from 'utils/interfaces';
 
 export class DashboardItemModel {
 
@@ -10,7 +10,7 @@ export class DashboardItemModel {
 
     @observable data: SeriesAveraged[];
 
-    @observable lastUsedParams: AveragedParameters;
+    @observable lastUsedParams: PlotParameters;
 
     @observable canShowChart: boolean;
 
@@ -27,10 +27,12 @@ export class DashboardItemModel {
         this.wasRemoved = true;
     }
 
-    async load(params: AveragedParameters) {
+    async load(params: PlotParameters) {
         this.loading = true;
         this.lastUsedParams = params;
-        await this.apiRequest.getAveragedPowerFromTo(params).then(d => { this.data = d; this.loading = false;});
+        await this.apiRequest.getAveragedPowerFromTo(params)
+        .then(d => { this.data = d; this.loading = false;})
+        .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].unit);
         this.canShowChart = true;
     }
 }

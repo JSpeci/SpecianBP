@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
-import { AveragedParameters, rgbColor } from 'utils/interfaces';
+import { PlotParameters, rgbColor } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
 
 //constants defined by actual data state
@@ -24,6 +24,8 @@ export class DashboardModel {
     @observable averagingStep: number = 1;
     @observable plotWidth: number = 800;
     @observable plotHeight: number = 400;
+
+
 
     @observable dataSettingsModel: DataSettingsModel;
 
@@ -53,7 +55,6 @@ export class DashboardModel {
     fromChanged(value: any) {
         this.dateFrom = value;
     }
-
 
     @action.bound
     averagingStepChanged(value: any) {
@@ -121,20 +122,27 @@ export class DashboardModel {
     }
 
     @action.bound
-    AddSeriesChart() {
+    async exportButtonClicked() {
+        await this.apiRequest.exportClicked();
+    }
+
+    @action.bound
+    addSeriesChart() {
         this.removeRemovedItems();
         const newItem = new DashboardItemModel(this.apiRequest);
         this.itemModels.push(newItem);
-        const params: AveragedParameters = {
+        const params: PlotParameters = {
             from: this.dateFrom.toDateString(),
             to: this.dateTo.toDateString(),
-            seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : "P_avg_3Pplus_C",
+            seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
             step: this.calculateStep(this.averagingStep),
             chartProps: {
                 type: this.dataSettingsModel.selectedChartType,
-                xSize: this.plotWidth, ySize: this.plotHeight
+                xSize: this.plotWidth, ySize: this.plotHeight,
+                lineColor: this.lineColor,
+                xAxisTitle: "Time",
+                yAxisTitle: "",
             },
-            lineColor: this.lineColor
         };
         console.log(params);
         newItem.load(params);

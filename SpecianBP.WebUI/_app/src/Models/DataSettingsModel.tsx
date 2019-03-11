@@ -17,7 +17,7 @@ export class DataSettingsModel {
     @observable selectedChartType: string = this.chartTypes[1];
 
     @action.bound
-    seriesNameChanged(value: string) {
+    async seriesNameChanged(value: string) {
         this.selectedSeries = value;
     }
 
@@ -40,8 +40,10 @@ export class DataSettingsModel {
     }
 
     async load() {
-
         this.loading = true;
-        await this.apiRequest.getPowerSeriesNamesList().then(d => { this.seriesNames = d; this.loading = false; });
+        await this.apiRequest.getPowerSeriesNamesList()
+        .then(d => { this.seriesNames = d; this.loading = false; })
+        .then(d => this.selectedSeries = "S_avg_S3_C" );
+        //await this.apiRequest.getSeriesUnit(this.seriesNames[0]).then(d => this.yAxisUnit = d);
     }
 }

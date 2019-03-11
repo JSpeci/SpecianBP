@@ -48,7 +48,7 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                                 x: xData,
                                 y: yData,
                                 marker: {
-                                    color:  Helpers.getRgbString(model.lastUsedParams.lineColor),
+                                    color:  Helpers.getRgbString(model.lastUsedParams.chartProps.lineColor),
                                 },
                                 // marker: {
                                 // //     color: 'rgb(17, 157, 255)',
@@ -61,6 +61,12 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                             },
                         ]}
                         layout={{
+                            xaxis:{
+                                title: model.lastUsedParams.chartProps.xAxisTitle
+                            },
+                            yaxis:{
+                                title: model.lastUsedParams.chartProps.yAxisTitle
+                            },
                             width: model.lastUsedParams.chartProps.xSize,
                             height: model.lastUsedParams.chartProps.ySize,
                             title: model.lastUsedParams.seriesName

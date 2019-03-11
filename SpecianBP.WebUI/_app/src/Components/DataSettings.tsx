@@ -47,7 +47,7 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             <label>Series</label>
                             <DropdownList
                                 data={model.dataSettingsModel.SeriesNames}
-                                defaultValue={model.dataSettingsModel.SeriesNames[0]}
+                                defaultValue={model.dataSettingsModel.selectedSeries}
                                 onChange={model.dataSettingsModel.seriesNameChanged}
                             />
                         </div>
@@ -87,7 +87,10 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             />
                         </div>
                         <div className="form-group settingsItem">
-                            <button className="btn btn-success inline-button" onClick={model.AddSeriesChart} type="button">Add !</button >
+                            <button className="btn btn-success inline-button" onClick={model.addSeriesChart} type="button">Add !</button >
+                        </div>
+                        <div className="form-group settingsItem">
+                            <button className="btn btn-warn inline-button" onClick={model.exportButtonClicked} type="button">Export</button >
                         </div>
                     </div>
                 </div>

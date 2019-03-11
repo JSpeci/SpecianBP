@@ -48,5 +48,17 @@ namespace SpecianBP.WebUI.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("Export")]
+        public ActionResult<IEnumerable<SeriesAveragedDto>> Export()
+        {
+            ;
+
+            //should call python plotly ?
+
+
+
+            return Ok("exported");
+        }
     }
 }
