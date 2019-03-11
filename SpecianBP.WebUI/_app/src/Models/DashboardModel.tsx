@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
 import { AveragedParameters, rgbColor } from 'utils/interfaces';
@@ -17,11 +17,13 @@ export class DashboardModel {
 
     apiRequest: ApiRequest;
 
-    @observable itemModels: DashboardItemModel[];
+    @observable private itemModels: DashboardItemModel[];
 
     @observable canShowCharts: boolean;
 
-    @observable averagingStep: number = 24;
+    @observable averagingStep: number = 1;
+    @observable plotWidth: number = 800;
+    @observable plotHeight: number = 400;
 
     @observable dataSettingsModel: DataSettingsModel;
 
@@ -43,6 +45,10 @@ export class DashboardModel {
         await this.dataSettingsModel.load().then(() => this.loading = false);
     }
 
+    @computed get ItemModels(): DashboardItemModel[] {
+        return this.itemModels.filter(i => !i.wasRemoved);
+    }
+
     @action.bound
     fromChanged(value: any) {
         this.dateFrom = value;
@@ -57,6 +63,28 @@ export class DashboardModel {
         }
         if (this.averagingStep >= 96) {
             this.averagingStep = 96;
+        }
+    }
+
+    @action.bound
+    plotHeightChanged(value: any) {
+        this.plotHeight = parseInt(value);
+        if (this.plotHeight <= 100) {
+            this.plotHeight = 100;
+        }
+        if (this.plotHeight >= 1000) {
+            this.plotHeight = 1000;
+        }
+    }
+
+    @action.bound
+    plotWidthChanged(value: any) {
+        this.plotWidth = parseInt(value);
+        if (this.plotWidth <= 100) {
+            this.plotWidth = 100;
+        }
+        if (this.plotWidth >= 2000) {
+            this.plotWidth = 2000;
         }
     }
 
@@ -88,8 +116,13 @@ export class DashboardModel {
         return  "1.00:00:00.000"; // one day
     }
 
+    private removeRemovedItems(){
+        this.itemModels = this.ItemModels;
+    }
+
     @action.bound
     AddSeriesChart() {
+        this.removeRemovedItems();
         const newItem = new DashboardItemModel(this.apiRequest);
         this.itemModels.push(newItem);
         const params: AveragedParameters = {
@@ -99,7 +132,7 @@ export class DashboardModel {
             step: this.calculateStep(this.averagingStep),
             chartProps: {
                 type: this.dataSettingsModel.selectedChartType,
-                xSize: 600, ySize: 300
+                xSize: this.plotWidth, ySize: this.plotHeight
             },
             lineColor: this.lineColor
         };

@@ -9,12 +9,12 @@ export class DataSettingsModel {
 
     @observable seriesNames: string[];
 
-    readonly chartTypes: string[] = ["bar","scatter"];
-    readonly chartColors: string[] = ["bar","scatter"];
+    public readonly chartTypes: string[] = ["bar","scatter"];
+    public readonly chartColors: string[] = ["bar","scatter"];
 
     @observable selectedSeries: string;
 
-    @observable selectedChartType: string = this.chartTypes[0];
+    @observable selectedChartType: string = this.chartTypes[1];
 
     @action.bound
     seriesNameChanged(value: string) {

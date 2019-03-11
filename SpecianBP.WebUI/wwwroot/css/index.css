@@ -1,5 +1,4 @@
 @import 'widgets-css.css';
-
 .container {
     min-width: 100%;
     height: 100%;
@@ -7,7 +6,7 @@
     padding: 0px !important;
 }
 
-.header{
+.header {
     display: flex;
     background-color: aliceblue;
     width: 100%;
@@ -15,7 +14,7 @@
     border-bottom: 1px salmon solid;
 }
 
-.header .logo{
+.header .logo {
     background-color: aqua;
     width: 45px;
     display: inline-block;
@@ -24,7 +23,7 @@
     background-repeat: no-repeat;
 }
 
-.header .headerBody{
+.header .headerBody {
     display: inline-block;
     height: 45px;
     padding: 3px;
@@ -32,7 +31,7 @@
     padding-top: 7px;
 }
 
-.footer{
+.footer {
     position: absolute;
     bottom: 0px;
     width: 100%;
@@ -43,12 +42,12 @@
     padding: 5px;
 }
 
-.dashboardBody{
+.dashboardBody {
     padding: 3px;
     /* background-color: #eee; */
 }
 
-.dashboardItem{
+.dashboardItem {
     display: inline-block;
     min-width: 300px;
     min-height: 300px;
@@ -57,7 +56,7 @@
     margin-left: 25px;
 }
 
-.settingsItem{
+.settingsItem {
     display: inline-block;
     max-width: 250px;
     margin-left: 9px;
@@ -67,7 +66,7 @@
     margin-top: -5px;
 }
 
-.loading{
+.loading {
     font-weight: bold;
     font-size: larger;
     color: cornflowerblue;
@@ -75,4 +74,15 @@
     padding: 13px;
     width: 100%;
     text-align: center;
+}
+
+.dashboardItemHeader {
+    position: relative;
+}
+
+.dashboardItemHeaderCancelbutton {
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    z-index: 11;
 }

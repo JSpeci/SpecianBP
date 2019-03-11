@@ -27,6 +27,13 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
 
             return (
                 <div className="dashboardItem">
+                    <div className="dashboardItemHeader">
+                        <div className="dashboardItemHeaderCancelbutton" >
+                            <button className="btn btn-outline-danger btn-sm"
+                            onClick={model.removeButtonClicked}
+                            >Remove</button>
+                        </div>
+                    </div>
                     <Plot
                         data={[
                             // {

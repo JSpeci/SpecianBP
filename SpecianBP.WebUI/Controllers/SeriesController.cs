@@ -37,7 +37,7 @@ namespace SpecianBP.WebUI.Controllers
         [HttpGet("SingleSeriesAveraged")]
         public ActionResult<IEnumerable<SeriesAveragedDto>> GetAvergaed([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] TimeSpan Step, [FromHeader] string SeriesName)
         {
-            if (From == null)
+            if (From == null || From >= To)
             {
                 From = defaultValuesFrom;
                 To = defaultValuesTo;

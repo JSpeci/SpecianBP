@@ -32,7 +32,7 @@ export class Dashboard extends React.Component<DashboardProps> {
                     model.canShowCharts &&
                     <div className="dashboardBody">
                         {
-                            model.itemModels.map(i => {
+                            model.ItemModels.map(i => {
                                 return (
                                     <DashboardItem key={Math.random()} model={i} />
                                 );

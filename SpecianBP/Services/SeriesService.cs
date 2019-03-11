@@ -34,6 +34,24 @@ namespace SpecianBP.Services
             // divide
             var data = resolveType(From, To, SeriesName);
 
+            if (isStatusType(SeriesName))  //shlould not be averaged boolean parametres
+            {
+                var resultStatuses = new List<SeriesAveragedDto>();
+                foreach (var d in data)
+                {
+                    if (d.StatusValue)
+                    {
+                        d.Value = 1F;
+                    }
+                    else
+                    {
+                        d.Value = 0F;
+                    }
+                    resultStatuses.Add(new SeriesAveragedDto() { AverageValue = d.Value, FromTime = d.Time, ToTime = d.Time, SeriesName = SeriesName });
+                }
+                return resultStatuses;
+            }
+
             DateTime intervalSart = From;
             DateTime intervalEnd = From + Step;
 
@@ -67,6 +85,19 @@ namespace SpecianBP.Services
                 }
             } while (intervalEnd < (To + Step) || !lastPart);
             return result;
+        }
+
+        private bool isStatusType(string SeriesName)
+        {
+            var names =
+            typeof(Status).GetProperties()
+                .Select(property => property.Name)
+                .ToList();
+            if (names.Contains(SeriesName))
+            {
+                return true;
+            }
+            else return false;
         }
 
         private List<TimeValuePairDto> resolveType(DateTime From, DateTime To, string SeriesName)
@@ -123,7 +154,7 @@ namespace SpecianBP.Services
             {
                 return _dbService.Status.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                .OrderBy(i => i.TimeLocal)
-               .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
+               .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, StatusValue = (bool)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                .ToList();
             }
             names =
