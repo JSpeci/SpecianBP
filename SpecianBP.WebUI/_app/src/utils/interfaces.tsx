@@ -1,25 +1,38 @@
-export interface SeriesAveraged
-{
+export interface SeriesAveraged {
     fromTime: any;
     toTime: any;
     averageValue: number;
-    maxValue:number;
-    minValue:number;
-    seriesName:string;
+    maxValue: number;
+    minValue: number;
+    seriesName: string;
+    unit: string;
 }
 
-export interface AveragedParameters
-{
+export interface PlotParameters {
     from: any;
     to: any;
-    seriesName:string;
-    step:any;
+    seriesName: string;
+    step: any;
+    chartProps: ChartProps;
 }
 
-export interface TimeValuePair
-{
+export interface TimeValuePair {
     time: any;
-    value:number;
-    seriesName:string;
+    value: number;
+    seriesName: string;
 }
 
+export interface ChartProps {
+    type: string;
+    xSize: number;
+    ySize: number;
+    lineColor: rgbColor;
+    xAxisTitle: string;
+    yAxisTitle: string;
+}
+
+export interface rgbColor{
+    r:number;
+    g:number;
+    b:number;
+}
