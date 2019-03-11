@@ -52,7 +52,7 @@ namespace SpecianBP.WebUI.Controllers
         /// </summary>
         // GET api/values
         [HttpGet("SingleSeriesAveraged")]
-        public ActionResult<IEnumerable<Power>> GetAvergaed([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] TimeSpan Step, [FromHeader] string SeriesName)
+        public ActionResult<IEnumerable<SeriesAveragedDto>> GetAvergaed([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] TimeSpan Step, [FromHeader] string SeriesName)
         {
             if(From == null)
             {
@@ -105,27 +105,8 @@ namespace SpecianBP.WebUI.Controllers
         }
 
         // GET api/values
-        [HttpGet("PowerSeriesNames")]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            var names = typeof(Power).GetProperties()
-                        .Select(property => property.Name)
-                        .ToList();
-
-            var names2 = typeof(Entity).GetProperties()
-                        .Select(property => property.Name)
-                        .ToList();
-
-            names2.Add("TimeLocal"); // ommit time local in requested series names
-
-            var resultNames = names.Except(names2);
-
-            return Ok(resultNames);
-        }
-
-        // GET api/values
         [HttpGet("SingleSeries")]
-        public ActionResult<IEnumerable<Power>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] string SeriesName)
+        public ActionResult<IEnumerable<TimeValuePairDto>> Get([FromHeader] DateTime from, [FromHeader] DateTime to, [FromHeader] string SeriesName)
         {
             if (from == null)
             {

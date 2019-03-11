@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
 import { DashboardItemModel } from 'Models/DashboardItemModel';
+import { Helpers } from '../utils/Helpers';
 import Plot from 'react-plotly.js';
 import { Loading } from './Loading';
+
 
 
 export interface DashboardItemProps {
@@ -34,15 +36,28 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                             //     mode: "lines+points",
                             //     marker: { color: "red" },
                             // },
-                            { 
-                                type: model.lastUsedParams.chartProps.type, 
-                                x: xData, 
-                                y: yData },
+                            {
+                                type: model.lastUsedParams.chartProps.type,
+                                x: xData,
+                                y: yData,
+                                marker: {
+                                    color:  Helpers.getRgbString(model.lastUsedParams.lineColor),
+                                },
+                                // marker: {
+                                // //     color: 'rgb(17, 157, 255)',
+                                // //     size: 60,
+                                //     line: {
+                                //         color: 'rgb(231, 99, 250)',
+                                //         width: 6
+                                //     }
+                                // },
+                            },
                         ]}
-                        layout={{ 
-                            width: model.lastUsedParams.chartProps.xSize, 
-                            height: model.lastUsedParams.chartProps.ySize, 
-                            title: model.lastUsedParams.seriesName }}
+                        layout={{
+                            width: model.lastUsedParams.chartProps.xSize,
+                            height: model.lastUsedParams.chartProps.ySize,
+                            title: model.lastUsedParams.seriesName
+                        }}
                     />
                 </div>
             );

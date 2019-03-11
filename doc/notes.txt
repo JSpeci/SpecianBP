@@ -48,7 +48,6 @@ Použil jsem watch režim, kdy bundler reaguje na změny v souborech a ihned ato
 Pro release pro nasazení do produkce stačí zavolat parcel build, který do finálního index.js souboru dependency packages podle souboru package.json. DevDependencies, kterými je právě typescript, typovost pro jiné balíčky, než je react, či pomocné devTools.
 Ještě je vhondé zmínit soubor package-lock.json, který obsahuje verze použitých balíčků. Nejčastěji využitý,při návratu k projektu po delší době.
 
-
 MobX
 MobX je javascriptová knihovna pro management stavu mezi komponentami a modelovými objekty. Nejedná se o stavový kontejner, jako například knihovna Redux. Používá se jako tzv. wrapper nad existujícími komponentami a modely a poskytuje propsání aktuálních hodnot v modelech do komponent a do přímo do zobrazených hodnot v metodě render konkrétní komponenty. MobX je nejčastěji používána ve spojení s knihovnou React. [4]
 Použití spočívá v anotaci @observer nad deklarací komponenty, čímž říkáme, že komponenta bude pozorovatelem všech svých primitivních i objektových parametrů v objektu props, které jsou označeny anotací @observable při deklaraci uvnitř modelových objektů, čímž jsou dekorovány na objekt tohoto typu. Změny takto anotovaných atributů budou ihned viditelné všude, kde jsou čteny libovolnou komponentou anotovanou jako observer. 
@@ -56,15 +55,21 @@ Dále jsou důležitou částí @computed hodnoty, které lze odvodit ze stávaj
 Na základě definované operace vrací hodnotu podle aktuálního stavu použitých atributů k výpočtu a poskytují vždy aktuální hodnotu.
 Na obrázku č. 3 uvádím jednoduchý model, který při zavolání metody inkrementuje atributy n1 a n2 a poskytuje vypočtenou hodnotu, která je jejich součtem. Zastřešující komponenta App2 čte z modelu vypočtenou hodnotu a celý model předává níže do vnořené komponenty, která volá akce definované na modelu, v tomto případě inkrementování atributů. Vždy je zobrazena aktuální hodnota.
 
-
 Bootstrap
 Jedná se o open-source CSS framework, neboli sadu hotových stylů, které lze snadno použít a ušetřit čas a práci při stylování uživatelského rozhraní webové aplikace oproti stylování od úplného základu. Nabízí mřížku, výchozí typografii, stylování pro formulářové elementy. Tvorba vizuální podoby se tak stává jednoduchým sestavováním vizuálních komponent. Obvyklá praxe je, použití Bootstrapu jako dobrého základu pro vizuální podobu a rozvržení a dále přidáním vlastních stylů se upravuje vzhled podle přesných požadavků a specifik aplikace. Výrazným přínosem tohoto css frameworku pro webové aplikace je vyřešená responzivita uživatelského rozhraní pro malá zařízení [7]
 
 Plotly.js
-Javascriptová knihovna pro 
+Javascriptová knihovna pro zobrazování grafových komponent a dashboardů. Použil jsem její variantu react-plotly.
+https://plot.ly/javascript/react/
 
 React Widgets
+Balíček pro snadné použití dropdown listů a datetimepickerů.
 
 Moment.js
+Balíček pro formátování času a lokalizaci datetime formátů
+
+Plánuji vyzkouše python plotly - python varianta - dashboard z prohlížeče by vypadal přesně jako ten v output pdf -> cíl práce ?
+https://plot.ly/python/
+
 
 

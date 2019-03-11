@@ -13,6 +13,7 @@ export interface AveragedParameters {
     seriesName: string;
     step: any;
     chartProps: ChartProps;
+    lineColor: rgbColor;
 }
 
 export interface TimeValuePair {
@@ -25,4 +26,10 @@ export interface ChartProps {
     type: string;
     xSize: number;
     ySize: number;
+}
+
+export interface rgbColor{
+    r:number;
+    g:number;
+    b:number;
 }

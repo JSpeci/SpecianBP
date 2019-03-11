@@ -62,7 +62,23 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/Power/PowerSeriesNames', myInit).then((response) => {
+        return fetch('/api/AdditionalData/PowerSeriesNames', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
+    getSeriesUnit(seriesName: string): Promise<string> {
+
+        const myHeaders = this.getHeaders();
+        myHeaders.append("SeriesName", seriesName);
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/AdditionalData/GetSeriesUnit', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

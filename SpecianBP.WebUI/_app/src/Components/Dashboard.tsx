@@ -14,7 +14,6 @@ export class Dashboard extends React.Component<DashboardProps> {
 
     render() {
         const model = this.props.dashboardModel;
-        console.log(model.loading);
         return (
             <div className="dashboard">
 

@@ -10,6 +10,7 @@ export class DataSettingsModel {
     @observable seriesNames: string[];
 
     readonly chartTypes: string[] = ["bar","scatter"];
+    readonly chartColors: string[] = ["bar","scatter"];
 
     @observable selectedSeries: string;
 

@@ -4,6 +4,7 @@ import { DateTimePicker, DropdownList } from 'react-widgets'
 import momentLocalizer from 'react-widgets-moment';
 import 'react-widgets/dist/css/react-widgets.css';
 import { DashboardModel } from 'Models/DashboardModel';
+import { GithubPicker } from 'react-color';
 
 export interface SourceDataSettingsProps {
     model: DashboardModel
@@ -56,6 +57,19 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                                 data={model.dataSettingsModel.chartTypes}
                                 defaultValue={"bar"}
                                 onChange={model.dataSettingsModel.chartTypeChanged}
+                            />
+                        </div>
+                        <div className="form-group settingsItem">
+                            <label>AveragePeriod (h)</label>
+                            <input type="number" 
+                            className={"form-control"} 
+                            value={model.averagingStep}
+                            onChange={(e) => model.averagingStepChanged(e.target.value)}/>
+                        </div>
+                        <div className="form-group settingsItem">
+                            <label>Line color</label>
+                            <GithubPicker 
+                                onChange={model.colorChanged}
                             />
                         </div>
                         <div className="form-group settingsItem">

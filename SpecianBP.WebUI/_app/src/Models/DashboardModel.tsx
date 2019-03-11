@@ -1,12 +1,12 @@
-import { observable, computed, action } from 'mobx';
+import { observable, action } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
-import { AveragedParameters } from 'utils/interfaces';
+import { AveragedParameters, rgbColor } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
 
 //constants defined by actual data state
-export const DefaultFromTime: Date = new Date(2018,3,1,0,0,0);
-export const DefaultToTime: Date = new Date(2018,4,1,0,0,0);
+export const DefaultFromTime: Date = new Date(2018, 3, 1, 0, 0, 0);
+export const DefaultToTime: Date = new Date(2018, 3, 14, 0, 0, 0);
 
 export class DashboardModel {
 
@@ -21,7 +21,11 @@ export class DashboardModel {
 
     @observable canShowCharts: boolean;
 
+    @observable averagingStep: number = 24;
+
     @observable dataSettingsModel: DataSettingsModel;
+
+    lineColor: rgbColor = { r: 50, g: 50, b: 200 };
 
     constructor(apiRequest: ApiRequest) {
         this.loading = false;
@@ -34,35 +38,72 @@ export class DashboardModel {
         this.loadDataSettingsModel();
     }
 
-    async loadDataSettingsModel(){
+    async loadDataSettingsModel() {
         this.loading = true;
         await this.dataSettingsModel.load().then(() => this.loading = false);
     }
 
     @action.bound
-    fromChanged(value:any){
+    fromChanged(value: any) {
         this.dateFrom = value;
     }
 
+
     @action.bound
-    toChanged(value:any){
+    averagingStepChanged(value: any) {
+        this.averagingStep = parseInt(value);
+        if (this.averagingStep <= 1) {
+            this.averagingStep = 1;
+        }
+        if (this.averagingStep >= 96) {
+            this.averagingStep = 96;
+        }
+    }
+
+    @action.bound
+    toChanged(value: any) {
         this.dateTo = value;
     }
 
     @action.bound
-    AddSeriesChart(){
+    colorChanged(value: any) {
+        this.lineColor.r = value.rgb.r;
+        this.lineColor.g = value.rgb.g;
+        this.lineColor.b = value.rgb.b;
+    }
+
+    private calculateStep(input: number): string {
+        if (input < 24) {
+            return "0." + input + ":00:00.000";
+        }
+        else if (input >= 24 && input < 48) {
+            return "1." + (input - 24) + ":00:00.000";
+        }
+        else if (input >= 48 && input < 72) {
+            return "2." + (input - 48) + ":00:00.000";
+        }
+        else if (input >= 72 && input < 96) {
+            return "3." + (input - 72) + ":00:00.000";
+        }
+        return  "1.00:00:00.000"; // one day
+    }
+
+    @action.bound
+    AddSeriesChart() {
         const newItem = new DashboardItemModel(this.apiRequest);
         this.itemModels.push(newItem);
         const params: AveragedParameters = {
             from: this.dateFrom.toDateString(),
             to: this.dateTo.toDateString(),
             seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : "P_avg_3Pplus_C",
-            step: "1.00:00:00.000",
+            step: this.calculateStep(this.averagingStep),
             chartProps: {
                 type: this.dataSettingsModel.selectedChartType,
                 xSize: 600, ySize: 300
             },
+            lineColor: this.lineColor
         };
+        console.log(params);
         newItem.load(params);
     }
 
@@ -71,9 +112,9 @@ export class DashboardModel {
         this.loading = true;
 
         this.itemModels.forEach(async element => {
-           await element.load(element.lastUsedParams).then(() => {
+            await element.load(element.lastUsedParams).then(() => {
                 console.log("loaded");
-           });
+            });
         });
     }
 }
