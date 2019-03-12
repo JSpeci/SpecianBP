@@ -8,3 +8,6 @@ parcel watch --out-dir ./wwwroot ./_app/src/index.tsx
 notes, how was developed : 
 
 https://stackoverflow.com/questions/4121993/how-to-run-a-py-python-file-in-asp-net
+
+mine python path 
+C:\Users\King\AppData\Local\Programs\Python\Python37
