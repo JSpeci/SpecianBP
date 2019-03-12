@@ -56,8 +56,6 @@ namespace SpecianBP.WebUI.Controllers
 
             //should call python plotly ?
 
-
-
             return Ok("exported");
         }
     }

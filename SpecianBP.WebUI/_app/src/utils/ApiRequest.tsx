@@ -62,7 +62,11 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/Series/Export', myInit);
+        return fetch('/api/Series/Export', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
     }
 
     getPowerSeriesNamesList(): Promise<string[]> {

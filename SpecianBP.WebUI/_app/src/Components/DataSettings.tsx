@@ -52,7 +52,7 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             />
                         </div>
                         <div className="form-group settingsItem">
-                            <label>ChartType</label>
+                            <label>Chart Type</label>
                             <DropdownList
                                 data={model.dataSettingsModel.chartTypes}
                                 defaultValue={model.dataSettingsModel.chartTypes[1]}
@@ -60,21 +60,21 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             />
                         </div>
                         <div className="form-group settingsItem">
-                            <label>AveragePeriod (h)</label>
+                            <label>Averaging period (h)</label>
                             <input type="number" 
                             className={"form-control"} 
                             value={model.averagingStep}
                             onChange={(e) => model.averagingStepChanged(e.target.value)}/>
                         </div>
                         <div className="form-group settingsItem">
-                            <label>Plot Width (px)</label>
+                            <label>Plot Width (*100px)</label>
                             <input type="number" 
                             className={"form-control"} 
                             value={model.plotWidth}
                             onChange={(e) => model.plotWidthChanged(e.target.value)}/>
                         </div>
                         <div className="form-group settingsItem">
-                            <label>Plot height (px)</label>
+                            <label>Plot height (*100px)</label>
                             <input type="number" 
                             className={"form-control"} 
                             value={model.plotHeight}

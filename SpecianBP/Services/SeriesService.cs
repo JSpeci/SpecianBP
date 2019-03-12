@@ -46,11 +46,6 @@ namespace SpecianBP.Services
             // divide
             var data = resolveType(From, To, SeriesName);
 
-            if(Step == TimeSpan.Zero)
-            {
-                return data.Select(i => new SeriesAveragedDto() { AverageValue = i.Value, FromTime = i.Time, ToTime = i.Time, SeriesName =  SeriesName, Unit = seriesUnit}).ToList();
-            }
-
             if (isStatusType(SeriesName))  //shlould not be averaged boolean parametres
             {
                 var resultStatuses = new List<SeriesAveragedDto>();
@@ -67,6 +62,11 @@ namespace SpecianBP.Services
                     resultStatuses.Add(new SeriesAveragedDto() { AverageValue = d.Value, FromTime = d.Time, ToTime = d.Time, SeriesName = SeriesName, Unit = "boolean" });
                 }
                 return resultStatuses;
+            }
+
+            if (Step == TimeSpan.Zero)
+            {
+                return data.Select(i => new SeriesAveragedDto() { AverageValue = i.Value, FromTime = i.Time, ToTime = i.Time, SeriesName =  SeriesName, Unit = seriesUnit}).ToList();
             }
 
             DateTime intervalSart = From;

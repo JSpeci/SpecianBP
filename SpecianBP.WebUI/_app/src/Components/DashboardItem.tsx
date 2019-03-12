@@ -67,8 +67,8 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                             yaxis:{
                                 title: model.lastUsedParams.chartProps.yAxisTitle
                             },
-                            width: model.lastUsedParams.chartProps.xSize,
-                            height: model.lastUsedParams.chartProps.ySize,
+                            width: model.lastUsedParams.chartProps.xSize * 100,
+                            height: model.lastUsedParams.chartProps.ySize * 100,
                             title: model.lastUsedParams.seriesName
                         }}
                     />
