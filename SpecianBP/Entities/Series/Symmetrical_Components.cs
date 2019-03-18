@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Symmetrical_Components : Entity
+    public class Symmetrical_Components : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
         //originalName = Symmetrical Components_Zero_φU0_C

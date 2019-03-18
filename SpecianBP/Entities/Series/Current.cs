@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Current : Entity
+    public class Current : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
         public float I_avg_IPEc_C { get; set; }

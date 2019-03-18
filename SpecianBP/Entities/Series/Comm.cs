@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Comm : Entity
+    public class Comm : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
 

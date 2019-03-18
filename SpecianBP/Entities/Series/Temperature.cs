@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Temperature : Entity
+    public class Temperature : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
         //originalName = Inputs/Temperature_avg_Ti_C

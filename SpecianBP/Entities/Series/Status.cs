@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Status : Entity
+    public class Status : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
         public string Status_Flow_C { get; set; }

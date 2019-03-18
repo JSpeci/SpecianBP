@@ -16,5 +16,6 @@ namespace SpecianBP.Entities
         public Guid Id { get; set; }
         public DateTimeOffset CreateDate { get; set; }
 
+
     }
 }

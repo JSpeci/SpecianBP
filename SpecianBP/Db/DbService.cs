@@ -33,7 +33,7 @@ namespace SpecianBP.Db
         public DbSet<Frequency> Frequency { get; set; }
         public DbSet<Power> Power { get; set; }
         public DbSet<Temperature> Temperature { get; set; }
-        public DbSet<Comm> Comm { get; set; }
+        //public DbSet<Comm> Comm { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<SeriesUnit> SeriesUnit { get; set; }
 

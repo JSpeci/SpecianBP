@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpecianBP.Entities
 {
-    public class Voltage : Entity
+    public class Voltage : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
         public float U_avg_U4_C { get; set; }
