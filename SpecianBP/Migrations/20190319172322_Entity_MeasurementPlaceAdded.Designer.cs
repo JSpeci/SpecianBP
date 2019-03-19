@@ -10,7 +10,7 @@ using SpecianBP.Db;
 namespace SpecianBP.Migrations
 {
     [DbContext(typeof(DbService))]
-    [Migration("20190317184709_Entity_MeasurementPlaceAdded")]
+    [Migration("20190319172322_Entity_MeasurementPlaceAdded")]
     partial class Entity_MeasurementPlaceAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,108 +21,10 @@ namespace SpecianBP.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SpecianBP.Entities.Comm", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Comm_485_RX_Data_C");
-
-                    b.Property<int>("Comm_485_RX_M__ACK_C");
-
-                    b.Property<int>("Comm_485_RX_M__ALL_C");
-
-                    b.Property<float>("Comm_485_TX_Data_C");
-
-                    b.Property<int>("Comm_485_TX_Message_C");
-
-                    b.Property<DateTime>("Comm_Cleared_C");
-
-                    b.Property<string>("Comm_ETH_CH_IP_0_C");
-
-                    b.Property<string>("Comm_ETH_CH_IP_1_C");
-
-                    b.Property<string>("Comm_ETH_CH_IP_2_C");
-
-                    b.Property<string>("Comm_ETH_CH_IP_3_C");
-
-                    b.Property<string>("Comm_ETH_CH_IP_4_C");
-
-                    b.Property<byte>("Comm_ETH_CH_Locked_0_C");
-
-                    b.Property<byte>("Comm_ETH_CH_Locked_1_C");
-
-                    b.Property<byte>("Comm_ETH_CH_Locked_2_C");
-
-                    b.Property<byte>("Comm_ETH_CH_Locked_3_C");
-
-                    b.Property<byte>("Comm_ETH_CH_Locked_4_C");
-
-                    b.Property<long>("Comm_ETH_CH_Port_0_C");
-
-                    b.Property<long>("Comm_ETH_CH_Port_1_C");
-
-                    b.Property<long>("Comm_ETH_CH_Port_2_C");
-
-                    b.Property<long>("Comm_ETH_CH_Port_3_C");
-
-                    b.Property<long>("Comm_ETH_CH_Port_4_C");
-
-                    b.Property<DateTime>("Comm_ETH_CH_Time_0_C");
-
-                    b.Property<DateTime>("Comm_ETH_CH_Time_1_C");
-
-                    b.Property<DateTime>("Comm_ETH_CH_Time_2_C");
-
-                    b.Property<DateTime>("Comm_ETH_CH_Time_3_C");
-
-                    b.Property<DateTime>("Comm_ETH_CH_Time_4_C");
-
-                    b.Property<byte>("Comm_ETH_Open_Sockets_min__C");
-
-                    b.Property<int>("Comm_ETH_RX_M__ALL_C");
-
-                    b.Property<int>("Comm_ETH_RX_M__ES_C");
-
-                    b.Property<int>("Comm_ETH_RX_M__KMB_C");
-
-                    b.Property<int>("Comm_ETH_RX_M__MODBUS_C");
-
-                    b.Property<int>("Comm_ETH_RX_M__WEB_C");
-
-                    b.Property<int>("Comm_ETH_SYN_ES_C");
-
-                    b.Property<int>("Comm_ETH_SYN_KMB_C");
-
-                    b.Property<int>("Comm_ETH_SYN_MODBUS_C");
-
-                    b.Property<int>("Comm_ETH_SYN_RCV_C");
-
-                    b.Property<int>("Comm_ETH_SYN_WEB_C");
-
-                    b.Property<float>("Comm_ETH_TX_Data_C");
-
-                    b.Property<int>("Comm_ETH_TX_Message_C");
-
-                    b.Property<DateTimeOffset>("CreateDate");
-
-                    b.Property<Guid>("MeasurementPlaceId");
-
-                    b.Property<DateTime>("TimeLocal");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MeasurementPlaceId");
-
-                    b.ToTable("Comm");
-                });
-
             modelBuilder.Entity("SpecianBP.Entities.Current", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<float>("I_avg_3I_C");
 
@@ -138,7 +40,9 @@ namespace SpecianBP.Migrations
 
                     b.Property<float>("I_avg_IPEc_C");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<Guid?>("MeasurementPlaceId");
+
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<DateTime>("TimeLocal");
 
@@ -164,8 +68,6 @@ namespace SpecianBP.Migrations
 
                     b.Property<float>("Cos_Cos4_C");
 
-                    b.Property<DateTimeOffset>("CreateDate");
-
                     b.Property<float>("D_avg_3D_C");
 
                     b.Property<float>("D_avg_D1_C");
@@ -176,7 +78,9 @@ namespace SpecianBP.Migrations
 
                     b.Property<float>("D_avg_D4_C");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<Guid?>("MeasurementPlaceId");
+
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<DateTime>("TimeLocal");
 
@@ -200,6 +104,8 @@ namespace SpecianBP.Migrations
 
                     b.Property<string>("FileName");
 
+                    b.Property<int>("NumberId");
+
                     b.HasKey("Id");
 
                     b.ToTable("MeasurementPlace");
@@ -210,9 +116,9 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<Guid?>("MeasurementPlaceId");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<float>("PF_3PF_C");
 
@@ -322,9 +228,9 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<Guid?>("MeasurementPlaceId");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<bool>("Status_ADC_Clipping_I1_C");
 
@@ -408,9 +314,9 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<Guid?>("MeasurementPlaceId");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<float>("Symmetrical_Components_Negative_I2_C");
 
@@ -460,11 +366,11 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
-
                     b.Property<float>("Inputs_Temperature_avg_Ti_C");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<Guid?>("MeasurementPlaceId");
+
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<DateTime>("TimeLocal");
 
@@ -479,8 +385,6 @@ namespace SpecianBP.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<string>("DisplayName");
 
@@ -502,8 +406,6 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
-
                     b.Property<string>("GrantsSerialized");
 
                     b.Property<bool?>("IsDeleted");
@@ -519,8 +421,6 @@ namespace SpecianBP.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("UserId");
 
@@ -540,9 +440,9 @@ namespace SpecianBP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreateDate");
+                    b.Property<Guid?>("MeasurementPlaceId");
 
-                    b.Property<Guid>("MeasurementPlaceId");
+                    b.Property<int?>("MeasurementPlaceNumberId");
 
                     b.Property<DateTime>("TimeLocal");
 
@@ -567,60 +467,46 @@ namespace SpecianBP.Migrations
                     b.ToTable("Voltages");
                 });
 
-            modelBuilder.Entity("SpecianBP.Entities.Comm", b =>
-                {
-                    b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
-                        .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SpecianBP.Entities.Current", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.Frequency", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.Power", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.Status", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.Symmetrical_Components", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.Temperature", b =>
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 
             modelBuilder.Entity("SpecianBP.Entities.UserUserRole", b =>
@@ -640,8 +526,7 @@ namespace SpecianBP.Migrations
                 {
                     b.HasOne("SpecianBP.Entities.MeasurementPlace", "MeasurementPlace")
                         .WithMany()
-                        .HasForeignKey("MeasurementPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MeasurementPlaceId");
                 });
 #pragma warning restore 612, 618
         }

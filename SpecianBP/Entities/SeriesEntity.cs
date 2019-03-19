@@ -6,7 +6,7 @@ namespace SpecianBP.Entities
 {
     public class SeriesEntity : Entity
     {
-        public Guid? MeasurementPlaceId { get; set; }
+        public int? MeasurementPlaceNumberId { get; set; }
         public virtual MeasurementPlace MeasurementPlace { get; set; }
     }
 }

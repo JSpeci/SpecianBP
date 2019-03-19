@@ -29,7 +29,7 @@ namespace SpecianBP.Db
         //Data series 
         public DbSet<Voltage> Voltages { get; set; }
         public DbSet<Current> Current { get; set; }
-        public DbSet<Symmetrical_Components> Symmetrical_Components { get; set; }
+        //public DbSet<Symmetrical_Components> Symmetrical_Components { get; set; }
         public DbSet<Frequency> Frequency { get; set; }
         public DbSet<Power> Power { get; set; }
         public DbSet<Temperature> Temperature { get; set; }

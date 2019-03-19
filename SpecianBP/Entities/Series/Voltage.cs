@@ -8,7 +8,7 @@ namespace SpecianBP.Entities
     public class Voltage : SeriesEntity
     {
         public DateTime TimeLocal { get; set; }
-        public float U_avg_U4_C { get; set; }
+        //public float U_avg_U4_C { get; set; }
         public float U_avg_U31_C { get; set; }
         public float U_avg_U3_C { get; set; }
         public float U_avg_U23_C { get; set; }
