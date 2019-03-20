@@ -35,7 +35,13 @@ namespace SpecianBP.WebUI.Controllers
         /// </summary>
         // GET api/values
         [HttpGet("SingleSeriesAveraged")]
-        public ActionResult<IEnumerable<SeriesAveragedDto>> GetAvergaed([FromHeader] DateTime From, [FromHeader] DateTime To, [FromHeader] TimeSpan Step, [FromHeader] string SeriesName)
+        public ActionResult<IEnumerable<SeriesAveragedDto>> GetAvergaed(
+            [FromHeader] DateTime From, 
+            [FromHeader] DateTime To, 
+            [FromHeader] TimeSpan Step, 
+            [FromHeader] string SeriesName,
+            [FromHeader] int MeasurementPlaceNumberId
+        )
         {
             if (From == null || From >= To)
             {
@@ -43,7 +49,7 @@ namespace SpecianBP.WebUI.Controllers
                 To = defaultValuesTo;
             }
 
-            var result = _seriesService.GetAveraged(From, To, Step, SeriesName);
+            var result = _seriesService.GetAveraged(From, To, Step, SeriesName, MeasurementPlaceNumberId);
             
 
             return Ok(result);

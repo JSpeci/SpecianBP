@@ -40,11 +40,11 @@ namespace SpecianBP.Services
         /// <param name="Step"></param>
         /// <param name="SeriesName"></param>
         /// <returns></returns>
-        public IList GetAveraged(DateTime From, DateTime To, TimeSpan Step, string SeriesName)
+        public IList GetAveraged(DateTime From, DateTime To, TimeSpan Step, string SeriesName, int MeasurementPlaceNumberId = 1)
         {
             string seriesUnit = GetSeriesUnit(SeriesName);
             // divide
-            var data = resolveType(From, To, SeriesName);
+            var data = resolveType(From, To, SeriesName, MeasurementPlaceNumberId);
 
             if (isStatusType(SeriesName))  //shlould not be averaged boolean parametres
             {
@@ -66,7 +66,7 @@ namespace SpecianBP.Services
 
             if (Step == TimeSpan.Zero)
             {
-                return data.Select(i => new SeriesAveragedDto() { AverageValue = i.Value, FromTime = i.Time, ToTime = i.Time, SeriesName =  SeriesName, Unit = seriesUnit}).ToList();
+                return data.Select(i => new SeriesAveragedDto() { AverageValue = i.Value, FromTime = i.Time, ToTime = i.Time, SeriesName = SeriesName, Unit = seriesUnit }).ToList();
             }
 
             DateTime intervalSart = From;
@@ -118,7 +118,7 @@ namespace SpecianBP.Services
             else return false;
         }
 
-        private List<TimeValuePairDto> resolveType(DateTime From, DateTime To, string SeriesName)
+        private List<TimeValuePairDto> resolveType(DateTime From, DateTime To, string SeriesName, int MeasurementPlaceNumberId)
         {
 
             var names = typeof(Power).GetProperties()
@@ -126,7 +126,9 @@ namespace SpecianBP.Services
                         .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Power.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Power
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                .OrderBy(i => i.TimeLocal)
                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                .ToList();
@@ -137,7 +139,9 @@ namespace SpecianBP.Services
                     .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Voltages.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Voltages
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
                 .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                 .ToList();
@@ -148,7 +152,9 @@ namespace SpecianBP.Services
                 .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Current.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Current
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
                 .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                 .ToList();
@@ -159,7 +165,9 @@ namespace SpecianBP.Services
                 .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Frequency.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Frequency
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                .OrderBy(i => i.TimeLocal)
                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                .ToList();
@@ -170,7 +178,9 @@ namespace SpecianBP.Services
                 .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Status.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Status
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                .OrderBy(i => i.TimeLocal)
                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, StatusValue = (bool)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                .ToList();
@@ -181,7 +191,9 @@ namespace SpecianBP.Services
                 .ToList();
             if (names.Contains(SeriesName))
             {
-                return _dbService.Temperature.Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
+                return _dbService.Temperature
+                    .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
+                    .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                .OrderBy(i => i.TimeLocal)
                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
                .ToList();

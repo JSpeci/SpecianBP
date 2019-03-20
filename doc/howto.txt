@@ -1,11 +1,24 @@
-﻿
+﻿--------------------------------ClientSide--------------------------------
+
+
 # to run bundler, must be in WebUi folder
 
+cd C:\Users\King\source\repos\SpecianBP\SpecianBP.WebUI
 parcel watch --out-dir ./wwwroot ./_app/src/index.tsx
 
 
 
-notes, how was developed : 
+--------------------------------Migrations--------------------------------
+
+
+cd C:\Users\King\source\repos\SpecianBP\SpecianBP
+dotnet ef migrations add InitialCreate -s ../SpecianBP.WebUI
+dotnet ef migrations add Entity_MeasurementPlaceAdded -s ../SpecianBP.WebUI
+dotnet ef database update -s ../SpecianBP.WebUI
+
+
+--------------------------------Notes-------------------------------------
+
 
 https://stackoverflow.com/questions/4121993/how-to-run-a-py-python-file-in-asp-net
 
