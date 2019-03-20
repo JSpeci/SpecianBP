@@ -36,6 +36,7 @@ namespace SpecianBP.Db
         //public DbSet<Comm> Comm { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<SeriesUnit> SeriesUnit { get; set; }
+        public DbSet<MeasurementPlace> MeasurementPlace { get; set; }
 
         public void InitializeDatabase()
         {

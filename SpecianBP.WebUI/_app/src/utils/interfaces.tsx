@@ -13,6 +13,7 @@ export interface PlotParameters {
     to: any;
     seriesName: string;
     step: any;
+    measurementPlaceNumberId: number;
     chartProps: ChartProps;
 }
 
@@ -31,8 +32,15 @@ export interface ChartProps {
     yAxisTitle: string;
 }
 
-export interface rgbColor{
-    r:number;
-    g:number;
-    b:number;
+export interface MeasurementPlace {
+    numberId: number;
+    displayName: string;
+    fileName: string;
+    adress: string;
+}
+
+export interface rgbColor {
+    r: number;
+    g: number;
+    b: number;
 }

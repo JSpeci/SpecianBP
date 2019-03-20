@@ -1,4 +1,4 @@
-import { SeriesAveraged, PlotParameters } from './interfaces';
+import { SeriesAveraged, PlotParameters, MeasurementPlace } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -40,6 +40,7 @@ export class ApiRequest {
         myHeaders.append("To", params.to);
         myHeaders.append("Step", params.step);
         myHeaders.append("SeriesName", params.seriesName);
+        myHeaders.append("MeasurementPlaceNumberId", params.measurementPlaceNumberId.toString());
 
         var myInit = {
             method: 'GET',
@@ -95,6 +96,21 @@ export class ApiRequest {
         };
 
         return fetch('/api/AdditionalData/GetSeriesUnit', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
+    getMeasurementPlaces(): Promise<MeasurementPlace[]> {
+
+        const myHeaders = this.getHeaders();
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/MeasurementPlaces/All', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

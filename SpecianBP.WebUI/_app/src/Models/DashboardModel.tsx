@@ -136,6 +136,7 @@ export class DashboardModel {
             to: this.dateTo.toDateString(),
             seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
             step: this.calculateStep(this.averagingStep),
+            measurementPlaceNumberId: this.dataSettingsModel.selectedMeaserementPlace.numberId,
             chartProps: {
                 type: this.dataSettingsModel.selectedChartType,
                 xSize: this.plotWidth, ySize: this.plotHeight,

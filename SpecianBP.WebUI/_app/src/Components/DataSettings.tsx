@@ -60,6 +60,14 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                             />
                         </div>
                         <div className="form-group settingsItem">
+                            <label>Measurement place</label>
+                            <DropdownList
+                                data={model.dataSettingsModel.MeasurementPlaces}
+                                defaultValue={model.dataSettingsModel.SelectedMeaserementPlace.displayName}
+                                onChange={model.dataSettingsModel.measurementPlaceChanged}
+                            />
+                        </div>
+                        <div className="form-group settingsItem">
                             <label>Averaging period (h)</label>
                             <input type="number" 
                             className={"form-control"} 
