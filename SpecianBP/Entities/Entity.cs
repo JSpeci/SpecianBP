@@ -10,11 +10,8 @@ namespace SpecianBP.Entities
         public Entity()
         {
             Id = Guid.NewGuid();
-            CreateDate = DateTimeOffset.Now;
         }
 
         public Guid Id { get; set; }
-        public DateTimeOffset CreateDate { get; set; }
-
     }
 }

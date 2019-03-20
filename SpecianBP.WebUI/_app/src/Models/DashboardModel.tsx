@@ -22,8 +22,8 @@ export class DashboardModel {
     @observable canShowCharts: boolean;
 
     @observable averagingStep: number = 1;
-    @observable plotWidth: number = 800;
-    @observable plotHeight: number = 400;
+    @observable plotWidth: number = 8;
+    @observable plotHeight: number = 4;
 
 
 
@@ -59,8 +59,8 @@ export class DashboardModel {
     @action.bound
     averagingStepChanged(value: any) {
         this.averagingStep = parseInt(value);
-        if (this.averagingStep <= 1) {
-            this.averagingStep = 1;
+        if (this.averagingStep <= 0) {
+            this.averagingStep = 0;
         }
         if (this.averagingStep >= 96) {
             this.averagingStep = 96;
@@ -70,22 +70,22 @@ export class DashboardModel {
     @action.bound
     plotHeightChanged(value: any) {
         this.plotHeight = parseInt(value);
-        if (this.plotHeight <= 100) {
-            this.plotHeight = 100;
+        if (this.plotHeight <= 4) {
+            this.plotHeight = 4;
         }
-        if (this.plotHeight >= 1000) {
-            this.plotHeight = 1000;
+        if (this.plotHeight >= 10) {
+            this.plotHeight = 10;
         }
     }
 
     @action.bound
     plotWidthChanged(value: any) {
         this.plotWidth = parseInt(value);
-        if (this.plotWidth <= 100) {
-            this.plotWidth = 100;
+        if (this.plotWidth <= 4) {
+            this.plotWidth = 4;
         }
-        if (this.plotWidth >= 2000) {
-            this.plotWidth = 2000;
+        if (this.plotWidth >= 20) {
+            this.plotWidth = 20;
         }
     }
 

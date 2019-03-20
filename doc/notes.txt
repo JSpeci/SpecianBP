@@ -10,6 +10,7 @@ Migrační projekt má svoje vlastní repo zde: https://github.com/JSpeci/CeaDat
 Knihovny poskytnuté ke čtení .cea filu jsou spustitelné pouze v .net frameworku 4.6.1.,
 proto DataImport není subprojekt hlavního projektu.
 Nyní si do databáze naimportuju i tabulku Units, jelikož neobsahuje jednotky.
+Později jsem reimportoval tabulku Status, sql insert bool hodnot je potřeba upravit na "0" a "1".
 
 První krok byla analýza archivu - jaká data v nich mám. Rozhodl jsem se je rozdělit do několika entit (Current,Voltage,Power,Status,Temperature), aby datová řada nebyla jedna velká nepřehledná entita s 300 atributy. Entity obsahují atributy pojmenované stejně, jako v konkrétních .cea archivech.
 Každá entita má Time: DateTime, Id: Guid. A pak definované atributy. Keré jsem vykopíroval ručně - vygeneroval jsem jejich jména a typ do txt souboru (https://github.com/JSpeci/CeaDataImport/blob/master/Translations.veliciny4-2018.txt)
@@ -21,15 +22,15 @@ Entity můžete prohlédnout v hlavním repozitáři aplikace
 
 K hlavní aplikaci.
 Repozitář hlavní aplikace naleznete zde : https://github.com/JSpeci/SpecianBP
+Serverová část je asp.net core 2.1 webApi projekt s jediným controllerem pro view, který vrací klientskou aplikaci v javascriptu.
+Prokousal jsem se mnoha tutoriály jak ustanovit novou web aplikaci s přidáním vlastní klientské aplikace. 
+Musel jsem vyzkoumat jak korektně propojit react klientskou aplikaci s asp webApi.
+Většinu času jsem strávil řešním toho, proč něco nefunguje jak chci. Hluboká zkušenost. Obvykle jsem přišel k rozjetým projektům. 
 
-Prokousal jsem se mnoha tutoriály jak ustanovit novou web aplikaci s přidáním vlastní klientské aplikace. Serverovou část - asp.net core webApi project. Seznámil jsem se s npm - node.js package managerem(dependencies/ dev-dependencies) a jak funguje bundling. K tomu používám parcel bundler - je daleko jednodušší a dá se používat bez složitého konfigurování oproti webpacku. Většinu času jsem strávil řešním toho, proč něco nefunguje jak chci. Hluboká zkušenost. Obvykle jsem přišel k rozjetým projektům. 
-
-Asp.net ore 2.1 webAplikace, bez razor views. 
+Asp.net ore 2.1 webAplikace, bez razor views.
 Default home route vrací klientskou single page aplikaci v React.js + mobX. Používám typescript : typový javascript. VSCode vás nutí všemu řiřadit typ/interface, primitivní, nebo objektový a nutí vás definovat i návratové typy. Tudíž od začátku se to chová jako psaní kódu v C# se správným napovídáním.
 
-Seznámení se s npm - správce balíčku pro node.js. Správné sestavení, dependencies a založení klientského projektu
-
-seznámení se s parcel bundlerem - překladačem tsx (es6) do index.js souboru, použití, rozběhání.
+Seznámil jsem se s npm - node.js package managerem(dependencies/ dev-dependencies) a jak funguje bundling. K tomu používám parcel bundler - je daleko jednodušší a dá se používat bez složitého konfigurování oproti webpacku. 
 
 React
 Jedná se o javascriptovou knihovnu pro tvorbu interaktivních uživatelských rozhraní, převážně single page aplikací. Umožňuje navrhnout interaktivní uživatelské rozhraní a vykreslovat komponenty podle vnitřního stavu aplikace v reálném čase.
@@ -64,13 +65,18 @@ Javascriptová knihovna pro zobrazování grafových komponent a dashboardů. Po
 https://plot.ly/javascript/react/
 
 React Widgets
-Balíček pro snadné použití dropdown listů a datetimepickerů.
+Balíček pro snadné použití komponnet dropdown listů a datetimepickerů.
 
 Moment.js
 Balíček pro formátování času a lokalizaci datetime formátů
 
-Plánuji vyzkouše python plotly - python varianta - dashboard z prohlížeče by vypadal přesně jako ten v output pdf -> cíl práce ?
+Plánuji vyzkoušet python plotly - python varianta - dashboard z prohlížeče by vypadal přesně jako ten v output pdf -> cíl práce ?
 https://plot.ly/python/
 
+https://plot.ly/python/pdf-reports/
 
+Přiložené video demonstruje to, co je naprogramované a jak to funguje.
 
+Další step je napojení exportu do pdf. Toho co jste na dashboard naskládal, to se stejnými parametry předám do plotly-python, nebo do matplotlib - na což již existuje wraper pro c#.
+
+Prosím vás o připomínky.
