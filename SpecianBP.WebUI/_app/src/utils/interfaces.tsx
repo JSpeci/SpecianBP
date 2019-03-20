@@ -8,12 +8,25 @@ export interface SeriesAveraged {
     unit: string;
 }
 
-export interface PlotParameters {
-    from: any;
-    to: any;
+export interface SeriesLineParams{
     seriesName: string;
     step: any;
     measurementPlaceNumberId: number;
+}
+
+export interface SeriesParams{
+    from: any;
+    to: any;
+    line: SeriesLineParams;
+}
+
+export interface MyPlotData {
+    data: SeriesAveraged[];
+    params: PlotParameters;
+}
+
+export interface PlotParameters {
+    seriesParams: SeriesParams;
     chartProps: ChartProps;
 }
 
@@ -30,6 +43,7 @@ export interface ChartProps {
     lineColor: rgbColor;
     xAxisTitle: string;
     yAxisTitle: string;
+    lineWidth: number;
 }
 
 export interface MeasurementPlace {

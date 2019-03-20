@@ -77,8 +77,7 @@ export class DataSettingsModel {
 
         await this.apiRequest.getMeasurementPlaces()
             .then(d => { this.measurementPlaces = d; this.loading = false; })
-            .then(d => this.selectedMeaserementPlace = this.measurementPlaces.filter((j: MeasurementPlace) => j.numberId === 1)[0])
-            .then(d => console.log(this.selectedMeaserementPlace));
+            .then(d => this.selectedMeaserementPlace = this.measurementPlaces.filter((j: MeasurementPlace) => j.numberId === 1)[0]);
 
         //await this.apiRequest.getSeriesUnit(this.seriesNames[0]).then(d => this.yAxisUnit = d);
     }

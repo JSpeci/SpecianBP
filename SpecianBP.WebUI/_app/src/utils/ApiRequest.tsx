@@ -33,14 +33,14 @@ export class ApiRequest {
         });
     }
 
-    getAveragedPowerFromTo(params: PlotParameters): Promise<SeriesAveraged[]> {
+    getAveragedSeriesData(params: PlotParameters): Promise<SeriesAveraged[]> {
 
         const myHeaders = this.getHeaders();
-        myHeaders.append("From", params.from);
-        myHeaders.append("To", params.to);
-        myHeaders.append("Step", params.step);
-        myHeaders.append("SeriesName", params.seriesName);
-        myHeaders.append("MeasurementPlaceNumberId", params.measurementPlaceNumberId.toString());
+        myHeaders.append("From", params.seriesParams.from);
+        myHeaders.append("To", params.seriesParams.to);
+        myHeaders.append("Step", params.seriesParams.line.step);
+        myHeaders.append("SeriesName", params.seriesParams.line.seriesName);
+        myHeaders.append("MeasurementPlaceNumberId", params.seriesParams.line.measurementPlaceNumberId.toString());
 
         var myInit = {
             method: 'GET',

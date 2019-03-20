@@ -8,6 +8,11 @@ import { DataSettingsModel } from './DataSettingsModel';
 export const DefaultFromTime: Date = new Date(2018, 3, 1, 0, 0, 0);
 export const DefaultToTime: Date = new Date(2018, 3, 14, 0, 0, 0);
 
+export enum HoursOrMinutes {
+    Hours = 0,
+    Minutes = 1,
+}
+
 export class DashboardModel {
 
     @observable loading: boolean;
@@ -21,9 +26,12 @@ export class DashboardModel {
 
     @observable canShowCharts: boolean;
 
-    @observable averagingStep: number = 1;
+    @observable averagingStepHours: number = 1;
+    @observable averagingStepMins: number = 0;
+
     @observable plotWidth: number = 8;
     @observable plotHeight: number = 4;
+    @observable lineWidth: number = 2;
 
 
 
@@ -57,13 +65,40 @@ export class DashboardModel {
     }
 
     @action.bound
-    averagingStepChanged(value: any) {
-        this.averagingStep = parseInt(value);
-        if (this.averagingStep <= 0) {
-            this.averagingStep = 0;
+    lineWidthChanged(value: any) {
+        this.lineWidth = parseInt(value);
+        if (this.lineWidth <= 0) {
+            this.lineWidth = 0;
         }
-        if (this.averagingStep >= 96) {
-            this.averagingStep = 96;
+        if (this.lineWidth >= 4) {
+            this.lineWidth = 4;
+        }
+    }
+
+    @action.bound
+    clearDash() {
+        this.itemModels = [];
+    }
+
+    @action.bound
+    averagingStepChanged(value: any, hoursMins: HoursOrMinutes = HoursOrMinutes.Hours) {
+        if (hoursMins === HoursOrMinutes.Hours) {
+            this.averagingStepHours = parseInt(value);
+            if (this.averagingStepHours <= 0) {
+                this.averagingStepHours = 0;
+            }
+            if (this.averagingStepHours >= 96) {
+                this.averagingStepHours = 96;
+            }
+        }
+        if (hoursMins === HoursOrMinutes.Minutes) {
+            this.averagingStepMins = parseInt(value);
+            if (this.averagingStepMins <= 0) {
+                this.averagingStepMins = 0;
+            }
+            if (this.averagingStepMins >= 59) {
+                this.averagingStepMins = 59;
+            }
         }
     }
 
@@ -101,23 +136,24 @@ export class DashboardModel {
         this.lineColor.b = value.rgb.b;
     }
 
-    private calculateStep(input: number): string {
-        if (input < 24) {
-            return "0." + input + ":00:00.000";
+    private calculateStep(hours: number, minutes: number = 0): string {
+        let minutesString = minutes < 10 ? "0" + minutes.toString() : minutes.toString();
+        if (hours < 24) {
+            return "0." + hours + ":" + minutesString + ":00.000";
         }
-        else if (input >= 24 && input < 48) {
-            return "1." + (input - 24) + ":00:00.000";
+        else if (hours >= 24 && hours < 48) {
+            return "1." + (hours - 24) + ":" + minutesString + ":00.000";
         }
-        else if (input >= 48 && input < 72) {
-            return "2." + (input - 48) + ":00:00.000";
+        else if (hours >= 48 && hours < 72) {
+            return "2." + (hours - 48) + ":" + minutesString + ":00.000";
         }
-        else if (input >= 72 && input < 96) {
-            return "3." + (input - 72) + ":00:00.000";
+        else if (hours >= 72 && hours < 96) {
+            return "3." + (hours - 72) + ":" + minutesString + ":00.000";
         }
-        return  "1.00:00:00.000"; // one day
+        return "1.00:00:00.000"; // one day
     }
 
-    private removeRemovedItems(){
+    private removeRemovedItems() {
         this.itemModels = this.ItemModels;
     }
 
@@ -127,26 +163,45 @@ export class DashboardModel {
     }
 
     @action.bound
-    addSeriesChart() {
+    addDashboardItem(indexOfItemToAppend: number = -1) {
         this.removeRemovedItems();
-        const newItem = new DashboardItemModel(this.apiRequest);
-        this.itemModels.push(newItem);
+
+        let dashboardItem = new DashboardItemModel(this.apiRequest);
+        if(this.itemModels.length === 0)
+        {
+            this.itemModels.push(dashboardItem);
+        }
+        else
+        {
+            dashboardItem = this.itemModels[0];
+        }
+
+        // let dashboardItem = new DashboardItemModel(this.apiRequest);
+        // debugger;
+        // this.itemModels.push(dashboardItem);
+
         const params: PlotParameters = {
-            from: this.dateFrom.toDateString(),
-            to: this.dateTo.toDateString(),
-            seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
-            step: this.calculateStep(this.averagingStep),
-            measurementPlaceNumberId: this.dataSettingsModel.selectedMeaserementPlace.numberId,
+            seriesParams: {
+                from: this.dateFrom.toDateString(),
+                to: this.dateTo.toDateString(),
+                line:
+                {
+                    seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
+                    step: this.calculateStep(this.averagingStepHours, this.averagingStepMins),
+                    measurementPlaceNumberId: this.dataSettingsModel.selectedMeaserementPlace.numberId,
+                }
+            },
             chartProps: {
                 type: this.dataSettingsModel.selectedChartType,
                 xSize: this.plotWidth, ySize: this.plotHeight,
                 lineColor: this.lineColor,
                 xAxisTitle: "Time",
                 yAxisTitle: "",
+                lineWidth: this.lineWidth
             },
         };
         console.log(params);
-        newItem.load(params);
+        dashboardItem.loadSerie(params).then(i => console.log(dashboardItem));
     }
 
     async reloadAllResources() {
@@ -154,7 +209,7 @@ export class DashboardModel {
         this.loading = true;
 
         this.itemModels.forEach(async element => {
-            await element.load(element.lastUsedParams).then(() => {
+            await element.loadSerie(element.lastUsedParams).then(() => {
                 console.log("loaded");
             });
         });
