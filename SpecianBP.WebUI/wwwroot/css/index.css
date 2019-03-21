@@ -6,15 +6,15 @@
     padding: 0px !important;
 }
 
-.header {
+.appHeader {
     display: flex;
-    background-color: aliceblue;
+    background-color: rgb(249, 252, 255);
     width: 100%;
     height: 45px;
     border-bottom: 1px salmon solid;
 }
 
-.header .logo {
+.appHeader .logo {
     background-color: aqua;
     width: 45px;
     display: inline-block;
@@ -23,7 +23,7 @@
     background-repeat: no-repeat;
 }
 
-.header .headerBody {
+.appHeader .headerBody {
     display: inline-block;
     height: 45px;
     padding: 3px;
@@ -62,17 +62,23 @@
     padding: 7px;
     border: 1px solid #eeeeee;
     border-radius: 7px;
+    margin-left: 14px;
+}
+
+.actionsPanel {
+    padding: 7px;
+    margin: 7px;
 }
 
 .settingsItem {
     display: inline-block;
     max-width: 300px;
-    margin-left: 9px;
+    margin: 4px;
 }
 
-.settingsItem .btn, .settingsItem .rw-dropdown-list {
+/* .settingsItem .btn, .settingsItem .rw-dropdown-list {
     margin-top: -5px;
-}
+} */
 
 .loading {
     font-weight: bold;
@@ -93,4 +99,9 @@
     left: 7px;
     top: 7px;
     z-index: 11;
+}
+
+.dataSettings .card-header {
+    padding-top: 7px;
+    background-color: white;
 }

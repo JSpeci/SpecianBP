@@ -22,8 +22,7 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
         const model = this.props.model;
 
         momentLocalizer();
-        const cardBody = (
-            <div className="card-body">
+        const settingsPanel = (
                 <div className="dataSettingsForm">
                     <div className="form-group settingsItem">
                         <label>From</label>
@@ -127,26 +126,15 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                         <button className="btn btn-danger inline-button" onClick={() => model.hideSettingsPanel()} type="button">Close settings</button >
                     </div>
                 </div>
-            </div>
         );
-        const dataSettings = (
-            <div className="dataSettings">
-                <div className="card-header">
-                    <div className="form-group settingsItem">
-                        <button className="btn btn-success inline-button" onClick={model.showSettingsPanel} type="button">Add something ?</button >
-                    </div>
-                    <div className="form-group settingsItem">
-                        <button className="btn btn-danger inline-button" onClick={model.clearDash} type="button">Clear dash</button >
-                    </div>
-                    <div className="form-group settingsItem">
-                        <button className="btn btn-warn inline-button" onClick={model.exportButtonClicked} type="button">Export</button >
-                    </div>
-                </div>
-                {
-                    model.dataSettingsModel.showSettings && cardBody
-                }
-            </div>
-        );
-        return dataSettings;
+
+        
+        
+            if(model.dataSettingsModel.showSettings)
+            {
+                return settingsPanel;
+            }
+            else return "";
+        
     }
 }
