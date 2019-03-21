@@ -1,12 +1,13 @@
 import { observable, computed, action } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
-import { MeasurementPlace } from 'utils/interfaces';
+import { MeasurementPlace, PlotParameters } from 'utils/interfaces';
 
 export class DataSettingsModel {
 
     apiRequest: ApiRequest;
 
     @observable loading: boolean;
+    @observable showSettings: boolean;
 
     @observable seriesNames: string[];
     @observable measurementPlaces: MeasurementPlace[];
@@ -18,6 +19,9 @@ export class DataSettingsModel {
     @observable selectedMeaserementPlace: MeasurementPlace;
 
     @observable selectedChartType: string = this.chartTypes[1];
+
+    @observable lastUsedParams: PlotParameters;
+    @observable insertIntoExistingPlotIndex: number;
 
     @action.bound
     async seriesNameChanged(value: string) {
@@ -36,6 +40,8 @@ export class DataSettingsModel {
 
     constructor(apiRequest: ApiRequest) {
         this.loading = false;
+        this.showSettings = true;
+        this.insertIntoExistingPlotIndex = 0;
         this.apiRequest = apiRequest;
         this.seriesNames = [];
         this.measurementPlaces = [];

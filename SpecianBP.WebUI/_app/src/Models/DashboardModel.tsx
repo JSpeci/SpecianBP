@@ -15,6 +15,8 @@ export enum HoursOrMinutes {
 
 export class DashboardModel {
 
+    readonly infoText: string = "This is your Dasboard";
+
     @observable loading: boolean;
 
     @observable dateFrom: Date;
@@ -32,8 +34,6 @@ export class DashboardModel {
     @observable plotWidth: number = 8;
     @observable plotHeight: number = 4;
     @observable lineWidth: number = 2;
-
-
 
     @observable dataSettingsModel: DataSettingsModel;
 
@@ -62,6 +62,17 @@ export class DashboardModel {
     @action.bound
     fromChanged(value: any) {
         this.dateFrom = value;
+    }
+
+    @action.bound
+    indexOfSeriesInsertChanged(value: any) {
+        this.dataSettingsModel.insertIntoExistingPlotIndex = parseInt(value);
+        if (this.dataSettingsModel.insertIntoExistingPlotIndex <= 0) {
+            this.dataSettingsModel.insertIntoExistingPlotIndex = 0;
+        }
+        if (this.dataSettingsModel.insertIntoExistingPlotIndex >= this.itemModels.length -1) {
+            this.dataSettingsModel.insertIntoExistingPlotIndex = this.itemModels.length -1;
+        }
     }
 
     @action.bound
@@ -163,17 +174,15 @@ export class DashboardModel {
     }
 
     @action.bound
-    addDashboardItem(indexOfItemToAppend: number = -1) {
+    submitParams(newBlock: boolean)
+    {
         this.removeRemovedItems();
-
         let dashboardItem = new DashboardItemModel(this.apiRequest);
-        if(this.itemModels.length === 0)
-        {
+        if (newBlock) {
             this.itemModels.push(dashboardItem);
         }
-        else
-        {
-            dashboardItem = this.itemModels[0];
+        else if(this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length ){
+            dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
 
         // let dashboardItem = new DashboardItemModel(this.apiRequest);
@@ -182,8 +191,8 @@ export class DashboardModel {
 
         const params: PlotParameters = {
             seriesParams: {
-                from: this.dateFrom.toDateString(),
-                to: this.dateTo.toDateString(),
+                from: this.dateFrom.toLocaleString(),
+                to: this.dateTo.toLocaleString(),
                 line:
                 {
                     seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
@@ -200,8 +209,20 @@ export class DashboardModel {
                 lineWidth: this.lineWidth
             },
         };
+        this.dataSettingsModel.lastUsedParams = params;
+        this.dataSettingsModel.showSettings = false;
         console.log(params);
         dashboardItem.loadSerie(params).then(i => console.log(dashboardItem));
+    }
+
+    @action.bound
+    showSettingsPanel() {
+        this.dataSettingsModel.showSettings = true;
+    }
+
+    @action.bound
+    hideSettingsPanel() {
+        this.dataSettingsModel.showSettings = false;
     }
 
     async reloadAllResources() {

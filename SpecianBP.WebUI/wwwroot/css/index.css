@@ -51,14 +51,22 @@
     display: inline-block;
     min-width: 300px;
     min-height: 300px;
-    border: 2px solid cornsilk;
+    border: 1px solid #f5fbe2;
+    border-radius: 7px;
     margin: 3px;
-    margin-left: 25px;
+    margin-left: 25px
+}
+
+.dataSettingsForm {
+    width: 730px;
+    padding: 7px;
+    border: 1px solid #eeeeee;
+    border-radius: 7px;
 }
 
 .settingsItem {
     display: inline-block;
-    max-width: 250px;
+    max-width: 300px;
     margin-left: 9px;
 }
 
