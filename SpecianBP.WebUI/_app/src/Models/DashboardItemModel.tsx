@@ -1,6 +1,7 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { PlotParameters, MyPlotData } from 'utils/interfaces';
+import { Helpers } from '../utils/Helpers';
 
 export class DashboardItemModel {
 
@@ -23,13 +24,33 @@ export class DashboardItemModel {
         this.data = [];
     }
 
+    @computed get plotlyDataObject() {
+        if (!this.loading && this.data) {
+
+            const data = this.data.map((d: MyPlotData) => {
+                let obj = {
+                    type: d.params.chartProps.type,
+                    x: d.data.map(k => k.fromTime),
+                    y: d.data.map(k => k.averageValue),
+                    line: {
+                        color: Helpers.getRgbString(d.params.chartProps.lineColor),
+                        width: d.params.chartProps.lineWidth
+                    }
+                };
+                return obj;
+            });
+            return data;
+        }
+        return null;
+    }
+
     @action.bound
-    removeButtonClicked(){
+    removeButtonClicked() {
         this.wasRemoved = true;
     }
 
     @action.bound
-    clearSeries(){
+    clearSeries() {
         this.data = [];
     }
 
@@ -37,8 +58,8 @@ export class DashboardItemModel {
         this.loading = true;
         this.lastUsedParams = params;
         await this.apiRequest.getAveragedSeriesData(params)
-        .then(d => { this.data.push({data:d, params: params}); this.loading = false;})
-        .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].data[0].unit);
+            .then(d => { this.data.push({ data: d, params: params }); this.loading = false; })
+            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].data[0].unit);
         this.canShowChart = true;
     }
 }

@@ -1,12 +1,8 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
 import { DashboardItemModel } from 'Models/DashboardItemModel';
-import { Helpers } from '../utils/Helpers';
 import Plot from 'react-plotly.js';
 import { Loading } from './Loading';
-import { MyPlotData } from 'utils/interfaces';
-
-
 
 export interface DashboardItemProps {
     name?: string;
@@ -20,21 +16,7 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
         const model = this.props.model;
 
         if (!model.loading && this.props.model.data) {
-            
-            const data = model.data.map((d: MyPlotData) => {
-                let obj = {
-                    type: d.params.chartProps.type,
-                    x: d.data.map(k => k.fromTime),
-                    y: d.data.map(k => k.averageValue),
-                    line: {
-                        color: Helpers.getRgbString(d.params.chartProps.lineColor),
-                        width: d.params.chartProps.lineWidth
-                    }
-                };
-                return obj;
-            });
-
-            return (
+                        return (
                 <div className="dashboardItem">
                     <div className="dashboardItemHeader">
                         <div className="dashboardItemHeaderCancelbutton" >
@@ -44,7 +26,7 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                         </div>
                     </div>
                     <Plot
-                        data={data}
+                        data={model.plotlyDataObject}
                         layout={{
                             xaxis: {
                                 title: model.lastUsedParams.chartProps.xAxisTitle
