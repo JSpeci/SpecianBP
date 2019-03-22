@@ -4,6 +4,7 @@ import { SourceDataSettings } from './DataSettings';
 import { DashboardItem } from './DashboardItem';
 import { DashboardModel } from 'Models/DashboardModel';
 import { Loading } from './Loading';
+import { ActionButtons } from './ActionButtons';
 
 export interface DashboardProps {
     dashboardModel: DashboardModel;
@@ -16,10 +17,9 @@ export class Dashboard extends React.Component<DashboardProps> {
         const model = this.props.dashboardModel;
         return (
             <div className="dashboard">
-
-
+                <ActionButtons model={this.props.dashboardModel} />
                 {
-                    !model.loading && <div className="dashboardHeader">
+                    !model.loading && model.dataSettingsModel.showSettings && <div className="dashboardHeader">
                         <SourceDataSettings model={this.props.dashboardModel} />
                     </div>
                 }
@@ -29,7 +29,7 @@ export class Dashboard extends React.Component<DashboardProps> {
                     </div>
                 }
                 {
-                    model.canShowCharts &&
+                    model.canShowCharts && !model.dataSettingsModel.showSettings &&
                     <div className="dashboardBody">
                         {
                             model.ItemModels.map(i => {
