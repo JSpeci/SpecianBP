@@ -7,6 +7,10 @@ cd C:\Users\King\source\repos\SpecianBP\SpecianBP.WebUI
 parcel watch --out-dir ./wwwroot ./_app/src/index.tsx
 
 
+https://stackoverflow.com/questions/38558989/node-js-heap-out-of-memory
+npm install -g increase-memory-limit
+increase-memory-limit
+
 
 --------------------------------Migrations--------------------------------
 
