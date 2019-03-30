@@ -17,7 +17,6 @@ export class App extends React.Component<AppProps> {
   render() {
     console.log("Rendering APP");
 
-    //ReactPDF.render(<mydoc />, `${__dirname}/pokusnyPDf.pdf`);
     return (
       <div className="container">
         <AppHeader />

@@ -42,7 +42,7 @@
     "@types/react-dom": "^16.8.2",
     "typescript": "^3.3.3333"
   },
-  "author": "",
+  "author": "Jan Specian",
   "license": "ISC",
-  "description": ""
+  "description": "Jan Specians bachelor thesis app - client side"
 }
