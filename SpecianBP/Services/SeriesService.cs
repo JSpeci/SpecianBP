@@ -143,7 +143,10 @@ namespace SpecianBP.Services
                     .Where(i => i.MeasurementPlaceNumberId == MeasurementPlaceNumberId)
                     .Where(i => i.TimeLocal >= From && i.TimeLocal <= To)
                 .OrderBy(i => i.TimeLocal)
-                .Select(i => new TimeValuePairDto() { Time = i.TimeLocal, Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null), SeriesName = SeriesName })
+                .Select(i => new TimeValuePairDto() {
+                    Time = i.TimeLocal,
+                    Value = (float)i.GetType().GetProperty(SeriesName).GetValue(i, null),
+                    SeriesName = SeriesName })
                 .ToList();
             }
             names =
