@@ -1,6 +1,7 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
-import { PlotParameters, SeriesAveraged } from 'utils/interfaces';
+import { PlotParameters, MyPlotData } from 'utils/interfaces';
+import { Helpers } from '../utils/Helpers';
 
 export class DashboardItemModel {
 
@@ -8,7 +9,7 @@ export class DashboardItemModel {
 
     @observable loading: boolean;
 
-    @observable data: SeriesAveraged[];
+    @observable data: MyPlotData[];
 
     @observable lastUsedParams: PlotParameters;
 
@@ -20,19 +21,45 @@ export class DashboardItemModel {
         this.loading = false;
         this.apiRequest = apiRequest;
         this.canShowChart = false;
+        this.data = [];
+    }
+
+    @computed get plotlyDataObject() {
+        if (!this.loading && this.data) {
+
+            const data = this.data.map((d: MyPlotData) => {
+                let obj = {
+                    type: d.params.chartProps.type,
+                    x: d.data.map(k => k.fromTime),
+                    y: d.data.map(k => k.averageValue),
+                    line: {
+                        color: Helpers.getRgbString(d.params.chartProps.lineColor),
+                        width: d.params.chartProps.lineWidth
+                    }
+                };
+                return obj;
+            });
+            return data;
+        }
+        return null;
     }
 
     @action.bound
-    removeButtonClicked(){
+    removeButtonClicked() {
         this.wasRemoved = true;
     }
 
-    async load(params: PlotParameters) {
+    @action.bound
+    clearSeries() {
+        this.data = [];
+    }
+
+    async loadSerie(params: PlotParameters) {
         this.loading = true;
         this.lastUsedParams = params;
-        await this.apiRequest.getAveragedPowerFromTo(params)
-        .then(d => { this.data = d; this.loading = false;})
-        .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].unit);
+        await this.apiRequest.getAveragedSeriesData(params)
+            .then(d => { this.data.push({ data: d, params: params }); this.loading = false; })
+            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].data[0].unit);
         this.canShowChart = true;
     }
 }
