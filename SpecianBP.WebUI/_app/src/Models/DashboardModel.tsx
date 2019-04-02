@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
-import { PlotParameters, rgbColor } from 'utils/interfaces';
+import { PlotParameters, rgbColor, MultilinePlot, MultilinePlotParams, SingleLinePlot } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
 import { AggregationFuncSelectrorModel } from '../Components/AggregationFuncSelectror';
 
@@ -66,8 +66,8 @@ export class DashboardModel {
         if (this.dataSettingsModel.insertIntoExistingPlotIndex <= 0) {
             this.dataSettingsModel.insertIntoExistingPlotIndex = 0;
         }
-        if (this.dataSettingsModel.insertIntoExistingPlotIndex >= this.itemModels.length -1) {
-            this.dataSettingsModel.insertIntoExistingPlotIndex = this.itemModels.length -1;
+        if (this.dataSettingsModel.insertIntoExistingPlotIndex >= this.itemModels.length - 1) {
+            this.dataSettingsModel.insertIntoExistingPlotIndex = this.itemModels.length - 1;
         }
     }
 
@@ -91,8 +91,6 @@ export class DashboardModel {
     clearDash() {
         this.itemModels = [];
     }
-
-
 
     @action.bound
     plotHeightChanged(value: any) {
@@ -149,25 +147,36 @@ export class DashboardModel {
         this.itemModels = this.ItemModels;
     }
 
-    @action.bound
-    async exportButtonClicked() {
-        await this.apiRequest.exportClicked();
+    public static getListOfMultiPlotParams(input: MultilinePlot[]): MultilinePlotParams[] {
+        const result: MultilinePlotParams[] = [];
+
+        input.forEach((i: MultilinePlot) => {
+            result.push({ plotParams: i.plots.map((j: SingleLinePlot) => j.plotParams) });
+        });
+
+        return result;
     }
 
     @action.bound
-    submitParams(newBlock: boolean)
-    {
+    async exportButtonClicked() {
+        const plotParams: MultilinePlot[] = [];
+        this.ItemModels.forEach(i => plotParams.push(i.data));
+        await this.apiRequest.postPdfExportParams(DashboardModel.getListOfMultiPlotParams(plotParams));
+    }
+
+    @action.bound
+    submitParams(newBlock: boolean) {
         this.removeRemovedItems();
         let dashboardItem = new DashboardItemModel(this.apiRequest);
         if (newBlock) {
             this.itemModels.push(dashboardItem);
         }
-        else if(this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length ){
+        else if (this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length) {
             dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
 
         const params: PlotParameters = {
-            aggrFunc: this.aggregationFuncModel.selectedFuncType ,
+            aggrFunc: this.aggregationFuncModel.selectedFuncType,
             seriesParams: {
                 from: this.dateFrom.toLocaleString(),
                 to: this.dateTo.toLocaleString(),

@@ -9,21 +9,30 @@ export interface SeriesAveraged {
     unit: string;
 }
 
-export interface SeriesLineParams{
+export interface SeriesLineParams {
     seriesName: string;
     step: any;
     measurementPlaceNumberId: number;
 }
 
-export interface SeriesParams{
+export interface SeriesParams {
     from: any;
     to: any;
     line: SeriesLineParams;
 }
 
-export interface MyPlotData {
+export interface MultilinePlot {
+    plots: SingleLinePlot[];
+}
+
+// multilinePlot without data - sending to server params
+export interface MultilinePlotParams {
+    plotParams: PlotParameters[];
+}
+
+export interface SingleLinePlot {
     data: SeriesAveraged[];
-    plotParams: PlotParameters;    
+    plotParams: PlotParameters;
 }
 
 export interface PlotParameters {

@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
-import { PlotParameters, MyPlotData } from '../utils/interfaces';
+import { PlotParameters, SingleLinePlot, MultilinePlot } from '../utils/interfaces';
 import { Helpers } from '../utils/Helpers';
 import { DataSources } from '../utils/DataSources';
 
@@ -10,7 +10,7 @@ export class DashboardItemModel {
 
     @observable loading: boolean;
 
-    @observable data: MyPlotData[];
+    @observable data: MultilinePlot;
 
     @observable lastUsedParams: PlotParameters;
 
@@ -23,13 +23,13 @@ export class DashboardItemModel {
         this.loading = false;
         this.apiRequest = apiRequest;
         this.canShowChart = false;
-        this.data = [];
+        this.data = { plots: []};
     }
 
     @computed get plotlyDataObject() {
         if (!this.loading && this.data) {
 
-            const data = this.data.map((d: MyPlotData) => {
+            const data = this.data.plots.map((d: SingleLinePlot) => {
                 let obj = {
                     type: d.plotParams.chartProps.type,
                     x: d.data.map(k => k.fromTime),
@@ -64,15 +64,15 @@ export class DashboardItemModel {
 
     @action.bound
     clearSeries() {
-        this.data = [];
+        this.data = { plots: []};
     }
 
     async loadSerie(params: PlotParameters) {
         this.loading = true;
         this.lastUsedParams = params;
         await this.apiRequest.getAveragedSeriesData(params)
-            .then(d => { this.data.push({ data: d, plotParams: params}); this.loading = false; })
-            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].data[0].unit);
+            .then(d => { this.data.plots.push({ data: d, plotParams: params}); this.loading = false; })
+            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data.plots[0].data[0].unit);
         this.canShowChart = true;
     }
 }

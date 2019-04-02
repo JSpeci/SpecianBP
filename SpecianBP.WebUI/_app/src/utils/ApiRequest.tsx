@@ -1,4 +1,4 @@
-import { SeriesAveraged, PlotParameters, MeasurementPlace } from './interfaces';
+import { SeriesAveraged, PlotParameters, MeasurementPlace, MultilinePlot, MultilinePlotParams } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -54,13 +54,17 @@ export class ApiRequest {
         });
     }
 
-    exportClicked(): Promise<void> {
+    postPdfExportParams(params: MultilinePlotParams[]): Promise<void> {
 
-        const myHeaders = this.getHeaders();
+        console.log(JSON.stringify(params));
 
         var myInit = {
-            method: 'GET',
-            headers: myHeaders
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
         };
 
         return fetch('/api/Series/Export', myInit).then((response) => {

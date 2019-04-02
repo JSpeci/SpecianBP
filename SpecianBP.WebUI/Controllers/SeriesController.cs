@@ -57,9 +57,11 @@ namespace SpecianBP.WebUI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("Export")]
-        public ActionResult Export()
+        [HttpPost("Export")]
+        public ActionResult Export([FromBody] JsonResult plotParams)
         {
+
+
             string tempfolder = System.IO.Path.GetTempPath();
             tempfolder = "C:\\Users\\King\\Documents\\BP\\ExampleSinPDF2222.pdf";
 
@@ -67,6 +69,8 @@ namespace SpecianBP.WebUI.Controllers
             //string plotPath = "C:\\Users\\King\\source\\repos\\MatplotlibCS\\MatplotlibCS\\Python\\matplotlib_cs.py";
             string plotPath = "C:\\Users\\King\\source\\repos\\MatplotlibTest\\MatplotlibTest\\MatplotlibCS\\matplotlib_cs.py";
             var matplotLibEngine = new MatplotlibCS.MatplotlibCS(pythonExe, plotPath);
+
+            ;
 
             #region create test data
 
@@ -164,12 +168,6 @@ namespace SpecianBP.WebUI.Controllers
             #endregion
             Task.WaitAll(t);
 
-            //;
-            //byte[] fileBytes = System.IO.File.ReadAllBytes(tempfolder);
-            //string fileName = "filename.extension";
-            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
-
-            ////          return File(attachment.FileData, "application/force-download", Path.GetFileName(attachment.FileName));
             return Ok("exported");
         }
     }
