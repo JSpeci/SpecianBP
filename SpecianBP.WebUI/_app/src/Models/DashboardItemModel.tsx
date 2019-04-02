@@ -1,7 +1,8 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
-import { PlotParameters, MyPlotData } from 'utils/interfaces';
+import { PlotParameters, MyPlotData } from '../utils/interfaces';
 import { Helpers } from '../utils/Helpers';
+import { DataSources } from '../utils/DataSources';
 
 export class DashboardItemModel {
 
@@ -17,6 +18,7 @@ export class DashboardItemModel {
 
     @observable wasRemoved: boolean = false;
 
+
     constructor(apiRequest: ApiRequest) {
         this.loading = false;
         this.apiRequest = apiRequest;
@@ -29,12 +31,23 @@ export class DashboardItemModel {
 
             const data = this.data.map((d: MyPlotData) => {
                 let obj = {
-                    type: d.params.chartProps.type,
+                    type: d.plotParams.chartProps.type,
                     x: d.data.map(k => k.fromTime),
-                    y: d.data.map(k => k.averageValue),
+                    y: d.data.map(k => {
+                        switch (d.plotParams.aggrFunc) {
+                            case DataSources.aggregationFuncTypes()[0].title:
+                                return k.averageValue;
+                            case DataSources.aggregationFuncTypes()[1].title:
+                                return k.minValue;
+                            case DataSources.aggregationFuncTypes()[2].title:
+                                return k.maxValue;
+                            default:
+                                return k.averageValue;
+                        }
+                    }),
                     line: {
-                        color: Helpers.getRgbString(d.params.chartProps.lineColor),
-                        width: d.params.chartProps.lineWidth
+                        color: Helpers.getRgbString(d.plotParams.chartProps.lineColor),
+                        width: d.plotParams.chartProps.lineWidth
                     }
                 };
                 return obj;
@@ -58,7 +71,7 @@ export class DashboardItemModel {
         this.loading = true;
         this.lastUsedParams = params;
         await this.apiRequest.getAveragedSeriesData(params)
-            .then(d => { this.data.push({ data: d, params: params }); this.loading = false; })
+            .then(d => { this.data.push({ data: d, plotParams: params}); this.loading = false; })
             .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data[0].data[0].unit);
         this.canShowChart = true;
     }

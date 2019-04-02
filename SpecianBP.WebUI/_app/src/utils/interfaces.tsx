@@ -1,3 +1,4 @@
+//INTERFACES
 export interface SeriesAveraged {
     fromTime: any;
     toTime: any;
@@ -22,12 +23,13 @@ export interface SeriesParams{
 
 export interface MyPlotData {
     data: SeriesAveraged[];
-    params: PlotParameters;
+    plotParams: PlotParameters;    
 }
 
 export interface PlotParameters {
     seriesParams: SeriesParams;
     chartProps: ChartProps;
+    aggrFunc: string;
 }
 
 export interface TimeValuePair {
@@ -57,4 +59,10 @@ export interface rgbColor {
     r: number;
     g: number;
     b: number;
+}
+
+//ENUMS
+export enum HoursOrMinutes {
+    Hours,
+    Minutes,
 }

@@ -3,8 +3,9 @@ import { observer } from 'mobx-react';
 import { DateTimePicker, DropdownList } from 'react-widgets'
 import momentLocalizer from 'react-widgets-moment';
 import 'react-widgets/dist/css/react-widgets.css';
-import { DashboardModel, HoursOrMinutes } from '../Models/DashboardModel';
+import { DashboardModel } from '../Models/DashboardModel';
 import { GithubPicker } from 'react-color';
+import { AggregationFuncSelectror } from './AggregationFuncSelectror';
 
 export interface SourceDataSettingsProps {
     model: DashboardModel
@@ -56,20 +57,7 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                         onChange={model.dataSettingsModel.seriesNameChanged}
                     />
                 </div>
-                <div className="form-group settingsItem">
-                    <label>Averaging period (h)</label>
-                    <input type="number"
-                        className={"form-control"}
-                        value={model.averagingStepHours}
-                        onChange={(e) => model.averagingStepChanged(e.target.value)} />
-                </div>
-                <div className="form-group settingsItem">
-                    <label>Averaging period (min)</label>
-                    <input type="number"
-                        className={"form-control"}
-                        value={model.averagingStepMins}
-                        onChange={(e) => model.averagingStepChanged(e.target.value, HoursOrMinutes.Minutes)} />
-                </div>
+                <AggregationFuncSelectror aggregationFuncModel={model.aggregationFuncModel}/>
                 <br />
                 <div className="form-group settingsItem">
                     <label>Chart Type</label>
@@ -78,6 +66,13 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                         defaultValue={model.dataSettingsModel.chartTypes[1]}
                         onChange={model.dataSettingsModel.chartTypeChanged}
                     />
+                </div>
+                <div className="form-group settingsItem">
+                    <label>Line width</label>
+                    <input type="number"
+                        className={"form-control"}
+                        value={model.lineWidth}
+                        onChange={(e) => model.lineWidthChanged(e.target.value)} />
                 </div>
                 <div className="form-group settingsItem">
                     <label>Plot Width (*100px)</label>
@@ -94,13 +89,7 @@ export class SourceDataSettings extends React.Component<SourceDataSettingsProps>
                         onChange={(e) => model.plotHeightChanged(e.target.value)} />
                 </div>
 
-                <div className="form-group settingsItem">
-                    <label>Line width</label>
-                    <input type="number"
-                        className={"form-control"}
-                        value={model.lineWidth}
-                        onChange={(e) => model.lineWidthChanged(e.target.value)} />
-                </div>
+
                 <br />
                 <div className="form-group settingsItem">
                     <label>Line color</label>

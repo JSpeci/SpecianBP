@@ -3,15 +3,12 @@ import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
 import { PlotParameters, rgbColor } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
+import { AggregationFuncSelectrorModel } from '../Components/AggregationFuncSelectror';
 
 //constants defined by actual data state
 export const DefaultFromTime: Date = new Date(2018, 3, 1, 0, 0, 0);
 export const DefaultToTime: Date = new Date(2018, 3, 14, 0, 0, 0);
 
-export enum HoursOrMinutes {
-    Hours = 0,
-    Minutes = 1,
-}
 
 export class DashboardModel {
 
@@ -28,14 +25,12 @@ export class DashboardModel {
 
     @observable canShowCharts: boolean;
 
-    @observable averagingStepHours: number = 1;
-    @observable averagingStepMins: number = 0;
-
     @observable plotWidth: number = 8;
     @observable plotHeight: number = 4;
     @observable lineWidth: number = 2;
 
     @observable dataSettingsModel: DataSettingsModel;
+    @observable aggregationFuncModel: AggregationFuncSelectrorModel;
 
     lineColor: rgbColor = { r: 50, g: 50, b: 200 };
 
@@ -46,6 +41,7 @@ export class DashboardModel {
         this.dateFrom = DefaultFromTime;
         this.dateTo = DefaultToTime;
         this.itemModels = [];
+        this.aggregationFuncModel = new AggregationFuncSelectrorModel();
         this.dataSettingsModel = new DataSettingsModel(apiRequest);
         this.loadDataSettingsModel();
     }
@@ -87,31 +83,16 @@ export class DashboardModel {
     }
 
     @action.bound
+    AgrFuncChanged(value: any) {
+
+    }
+
+    @action.bound
     clearDash() {
         this.itemModels = [];
     }
 
-    @action.bound
-    averagingStepChanged(value: any, hoursMins: HoursOrMinutes = HoursOrMinutes.Hours) {
-        if (hoursMins === HoursOrMinutes.Hours) {
-            this.averagingStepHours = parseInt(value);
-            if (this.averagingStepHours <= 0) {
-                this.averagingStepHours = 0;
-            }
-            if (this.averagingStepHours >= 96) {
-                this.averagingStepHours = 96;
-            }
-        }
-        if (hoursMins === HoursOrMinutes.Minutes) {
-            this.averagingStepMins = parseInt(value);
-            if (this.averagingStepMins <= 0) {
-                this.averagingStepMins = 0;
-            }
-            if (this.averagingStepMins >= 59) {
-                this.averagingStepMins = 59;
-            }
-        }
-    }
+
 
     @action.bound
     plotHeightChanged(value: any) {
@@ -185,18 +166,15 @@ export class DashboardModel {
             dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
 
-        // let dashboardItem = new DashboardItemModel(this.apiRequest);
-        // debugger;
-        // this.itemModels.push(dashboardItem);
-
         const params: PlotParameters = {
+            aggrFunc: this.aggregationFuncModel.selectedFuncType ,
             seriesParams: {
                 from: this.dateFrom.toLocaleString(),
                 to: this.dateTo.toLocaleString(),
                 line:
                 {
                     seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
-                    step: this.calculateStep(this.averagingStepHours, this.averagingStepMins),
+                    step: this.calculateStep(this.aggregationFuncModel.averagingStepHours, this.aggregationFuncModel.averagingStepMins),
                     measurementPlaceNumberId: this.dataSettingsModel.selectedMeaserementPlace.numberId,
                 }
             },
