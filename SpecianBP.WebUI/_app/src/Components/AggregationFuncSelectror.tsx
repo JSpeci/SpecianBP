@@ -67,8 +67,7 @@ export class AggregationFuncSelectror extends React.Component<AggregationFuncSel
                         onChange={model.funcTypeChanged}
                     />
                 </div>
-
-
+                
                 <br />
                 <div className="form-group settingsItem">
                     <label>select period (h)</label>

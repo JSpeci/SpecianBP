@@ -58,19 +58,32 @@ namespace SpecianBP.WebUI.Controllers
         }
 
         [HttpPost("Export")]
-        public ActionResult Export([FromBody] JsonResult plotParams)
+        public ActionResult Export([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string fileName = "PlotExportPdf.pdf")
         {
+            if(plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(fileName))
+            {
+                return BadRequest();
+            }
 
-
+            ;
             string tempfolder = System.IO.Path.GetTempPath();
             tempfolder = "C:\\Users\\King\\Documents\\BP\\ExampleSinPDF2222.pdf";
-
             string pythonExe = "C:\\Users\\King\\AppData\\Local\\Programs\\Python\\Python37\\python.exe";
             //string plotPath = "C:\\Users\\King\\source\\repos\\MatplotlibCS\\MatplotlibCS\\Python\\matplotlib_cs.py";
             string plotPath = "C:\\Users\\King\\source\\repos\\MatplotlibTest\\MatplotlibTest\\MatplotlibCS\\matplotlib_cs.py";
             var matplotLibEngine = new MatplotlibCS.MatplotlibCS(pythonExe, plotPath);
 
             ;
+
+
+            //query series service to get data
+            //var result = _seriesService.GetAveraged(From, To, Step, SeriesName, MeasurementPlaceNumberId);
+
+            //fill approriate data structure List<List<SeriesAveraged>> ??
+
+            //map plot params into concrete matplotlib objects - code own mapper
+
+            //call matplotib and test it !
 
             #region create test data
 
@@ -169,6 +182,54 @@ namespace SpecianBP.WebUI.Controllers
             Task.WaitAll(t);
 
             return Ok("exported");
+        }
+
+
+    }
+
+
+
+    public class MultilinePlotParams
+    {
+        public PlotParams[] plotParams { get; set; }
+    }
+
+    public class PlotParams
+    {
+        public string aggrFunc { get; set; }
+        public SeriesParams seriesParams { get; set; }
+        public ChartProps chartProps { get; set; }
+
+        public class SeriesParams
+        {
+            public DateTime from { get; set; }
+            public DateTime to { get; set; }
+            public Line line { get; set; }
+        }
+
+        public class Line
+        {
+            public string seriesName { get; set; }
+            public TimeSpan step { get; set; }
+            public int measurementPlaceNumberId { get; set; }
+        }
+
+        public class ChartProps
+        {
+            public string type { get; set; }
+            public int xSize { get; set; }
+            public int ySize { get; set; }
+            public string xAxisTitle { get; set; }
+            public string yAxisTitle { get; set; }
+            public int lineWidth { get; set; }
+            public LineColor lineColor { get; set; }
+        }
+
+        public class LineColor
+        {
+            public int r { get; set; }
+            public int g { get; set; }
+            public int b { get; set; }
         }
     }
 }

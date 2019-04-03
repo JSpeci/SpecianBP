@@ -54,7 +54,7 @@ export class ApiRequest {
         });
     }
 
-    postPdfExportParams(params: MultilinePlotParams[]): Promise<void> {
+    postPdfExportParams(params: MultilinePlotParams[], filename: string = "PlotPdfExport.pdf"): Promise<void> {
 
         console.log(JSON.stringify(params));
 
@@ -67,7 +67,9 @@ export class ApiRequest {
             body: JSON.stringify(params)
         };
 
-        return fetch('/api/Series/Export', myInit).then((response) => {
+        const queryParams = "?fileName=" + filename;
+
+        return fetch('/api/Series/Export' + queryParams, myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

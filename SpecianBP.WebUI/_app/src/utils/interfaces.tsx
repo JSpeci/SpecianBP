@@ -1,4 +1,8 @@
 //INTERFACES
+
+/**
+ * Changes made here must be proven in structures on server side - this project has no model builder
+ */
 export interface SeriesAveraged {
     fromTime: any;
     toTime: any;

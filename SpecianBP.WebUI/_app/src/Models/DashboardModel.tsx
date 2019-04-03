@@ -32,6 +32,8 @@ export class DashboardModel {
     @observable dataSettingsModel: DataSettingsModel;
     @observable aggregationFuncModel: AggregationFuncSelectrorModel;
 
+    @observable exportFileName: string;
+
     lineColor: rgbColor = { r: 50, g: 50, b: 200 };
 
     constructor(apiRequest: ApiRequest) {
@@ -80,11 +82,6 @@ export class DashboardModel {
         if (this.lineWidth >= 4) {
             this.lineWidth = 4;
         }
-    }
-
-    @action.bound
-    AgrFuncChanged(value: any) {
-
     }
 
     @action.bound
@@ -158,10 +155,17 @@ export class DashboardModel {
     }
 
     @action.bound
+    exportFilenameChaged(value: string) {
+        if (value.length > 0) {
+            this.exportFileName = value;
+        }
+    }
+
+    @action.bound
     async exportButtonClicked() {
         const plotParams: MultilinePlot[] = [];
         this.ItemModels.forEach(i => plotParams.push(i.data));
-        await this.apiRequest.postPdfExportParams(DashboardModel.getListOfMultiPlotParams(plotParams));
+        await this.apiRequest.postPdfExportParams(DashboardModel.getListOfMultiPlotParams(plotParams), this.exportFileName);
     }
 
     @action.bound
