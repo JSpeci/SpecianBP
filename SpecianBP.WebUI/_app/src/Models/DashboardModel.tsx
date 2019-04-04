@@ -202,7 +202,7 @@ export class DashboardModel {
         };
         this.dataSettingsModel.lastUsedParams = params;
         this.dataSettingsModel.showSettings = false;
-        console.log(params);
+        //console.log(params);
         dashboardItem.loadSerie(params).then(i => console.log(dashboardItem));
     }
 
