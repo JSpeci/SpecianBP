@@ -6,103 +6,121 @@ using MatplotlibCS;
 using MatplotlibCS.PlotItems;
 using SpecianBP.Api.PlotExportModels;
 using System.Linq;
+using SpecianBP.Api.Dto;
 
 namespace SpecianBP.Services
 {
     public class MatplotLibParamsMappingService
     {
-        protected readonly DbService _dbService;
+        //private structs for loading data
+        private class MultilinePlotParamsWithData
+        {
+            public MultilinePlotParams plotParams { get; set; }
+            public List<SingleLinePlotWithData> plotData { get; set; }
+        }
 
-        public MatplotLibParamsMappingService(DbService context)
+        private class SingleLinePlotWithData : PlotParams
+        {
+            public List<SeriesAveragedDto> Data { get; set; }
+        }
+
+        public MatplotLibParamsMappingService(DbService context, SeriesService seriesService)
         {
             _dbService = context;
+            _seriesService = seriesService;
+
+            posibleLineColors = new List<Color>();
+            posibleLineColors.Add(Color.Blue);
+            posibleLineColors.Add(Color.Cyan);
+            posibleLineColors.Add(Color.Green);
+            posibleLineColors.Add(Color.Red);
+            posibleLineColors.Add(Color.Black);
+            posibleLineColors.Add(Color.Magenta);
+            posibleLineColors.Add(Color.Yellow);
+        }
+
+        private List<MatplotlibCS.PlotItems.Color> posibleLineColors { get; set; }
+
+        protected readonly DbService _dbService;
+        protected readonly SeriesService _seriesService;
+
+        private MultilinePlotParamsWithData BuildPlotDataStruct(MultilinePlotParams plotParams)
+        {
+            MultilinePlotParamsWithData result = new MultilinePlotParamsWithData();
+            result.plotParams = plotParams;
+            result.plotData = new List<SingleLinePlotWithData>();
+            foreach (var singlePlot in plotParams.plotParams)
+            {
+
+                var seriesData = _seriesService.GetAveraged(singlePlot.seriesParams.from, singlePlot.seriesParams.to, singlePlot.seriesParams.line.step, singlePlot.seriesParams.line.seriesName, singlePlot.seriesParams.line.measurementPlaceNumberId);
+                var data = new SingleLinePlotWithData() { Data = seriesData, aggrFunc = singlePlot.aggrFunc, chartProps = singlePlot.chartProps, seriesParams = singlePlot.seriesParams };
+                result.plotData.Add(data);
+            }
+            return result;
         }
 
         public Figure getMatplotLibFigureFromPlotParams(MultilinePlotParams[] plotParams, string pathFithFileName)
         {
 
-            const int N = 100;
-            var X = new double[N];
-            var Y1 = new double[N];
-            var Y2 = new double[N];
-            var x = 0.0;
-            const double h = 2 * Math.PI / N;
-            var rnd = new Random();
-            for (var i = 0; i < N; i++)
-            {
-                var y = Math.Sin(x);
-                X[i] = x;
-                Y1[i] = y;
-
-                y = Math.Sin(2 * x);
-                Y2[i] = y + rnd.NextDouble() / 10.0;
-
-                x += h;
-            }
-
-            var figure = new Figure(1, 1)
+            //build figure
+            var figure = new Figure(plotParams.Length, 1)
             {
                 FileName = pathFithFileName,
                 OnlySaveImage = true,
                 DPI = 150,
                 Width = 1920,
-                Height = 1080,
-                Subplots =
-                {
-                    new Axes(1, "The X axis", "The Y axis")
-                    {
-                        Title = "Sin(x), Sin(2x), VLines, HLines, Annotations",
-                        LegendBorder = false,
-                        Grid = new Grid()
-                        {
-                            MinorAlpha = 0.2,
-                            MajorAlpha = 1.0,
-                            XMajorTicks = new[] {0.0, 7.6, 0.5, 1.75},
-                            YMajorTicks = new[] {-1, 2.5, 0.25, 0.125},
-                            XMinorTicks = new[] {0.0, 7.25, 0.25, 1.125},
-                            YMinorTicks = new[] {-1, 2.5, 0.125, 1.025}
-                        },
-                        PlotItems =
-                        {
-                            new Line2D("Sin")
-                            {
-                                X = X.Cast<object>().ToList(),
-                                Y = Y1.ToList(),
-                                LineStyle = LineStyle.Dashed
-                            },
-
-                            new Line2D("Sin 2x")
-                            {
-                                X = X.Cast<object>().ToList(),
-                                Y = Y2.ToList(),
-                                LineStyle = LineStyle.Solid,
-                                LineWidth = 0.5f,
-                                Color = "r",
-                                Markevery = 5,
-                                MarkerSize = 10,
-                                Marker = Marker.Circle,
-                                ShowLegend = false
-                            },
-
-                            new Text("ant1", "Text annotation", 4.5, 0.76)
-                            {
-                                FontSize = 17
-                            },
-
-                            new Annotation("ant2","Arrow text annotation", 0.5, -0.7, 3, 0)
-                            {
-                                Color = "#44ff88",
-                                ArrowStyle = ArrowStyle.Both,
-                                LineWidth = 3,
-                            },
-
-                            new Vline("vert line", new object[] {3.0}, -1, 1),
-                            new Hline("hrzt line", new[] {0.1, 0.25, 0.375}, 0, 5) {LineStyle = LineStyle.Dashed, Color = Color.Magenta}
-                        }
-                    }
-
-                }
+                Height = plotParams.Length > 1 ? 800 * plotParams.Length : 1080,
             };
+
+            var messPlaces = _dbService.MeasurementPlace.ToList();
+
+            int index = 1;
+            foreach (var multilinePlot in plotParams)
+            {
+                var plotData = BuildPlotDataStruct(multilinePlot);
+
+                var plotItemsInSubplot = new List<PlotItem>();
+
+                int indexOfdata = 0;
+                foreach (var line in multilinePlot.plotParams)
+                {
+                    List<double> Ydata = new List<double>();
+                    switch (line.aggrFunc)
+                    {
+                        case "Min":
+                            Ydata = plotData.plotData[indexOfdata].Data.Select(i => (double)(i.MinValue)).ToList();
+                            break;
+                        case "Max":
+                            Ydata = plotData.plotData[indexOfdata].Data.Select(i => (double)(i.MaxValue)).ToList();
+                            break;
+                        case "Average":
+                            Ydata = plotData.plotData[indexOfdata].Data.Select(i => (double)(i.AverageValue)).ToList();
+                            break;
+                    }
+                    var item = new Line2D($"{line.seriesParams.line.seriesName} {messPlaces.Where(i => i.NumberId == line.seriesParams.line.measurementPlaceNumberId).First().DisplayName} period: {line.seriesParams.line.step} aggrFunc: {line.aggrFunc}")
+                    {
+                        //select different colors
+                        Color = posibleLineColors[indexOfdata % posibleLineColors.Count],
+                        LineWidth = line.chartProps.lineWidth,
+                        X = plotData.plotData[indexOfdata].Data.Select(i => i.FromTime).Cast<object>().ToList(),
+                        Y = Ydata,
+
+                    };
+                    plotItemsInSubplot.Add(item);
+                    indexOfdata++;
+                }
+
+                var axes = new Axes(index, "", plotData.plotData.First().Data.First().Unit)
+                {
+                    Title = "\n\n",
+                    LegendBorder = false,
+                    LegendLocation = LegendLocation.UpperLeft,
+                    PlotItems = plotItemsInSubplot,
+                };
+
+                figure.Subplots.Add(axes);
+                index++;
+            }
 
             return figure;
         }
