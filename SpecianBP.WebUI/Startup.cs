@@ -36,6 +36,7 @@ namespace WebUI
 
             services.AddDbContext<DbService>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<SeriesService>();
+            services.AddScoped<MatplotLibParamsMappingService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

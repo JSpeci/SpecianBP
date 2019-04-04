@@ -1,17 +1,14 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
-import { PlotParameters, rgbColor } from 'utils/interfaces';
+import { PlotParameters, rgbColor, MultilinePlot, MultilinePlotParams, SingleLinePlot } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
+import { AggregationFuncSelectrorModel } from '../Components/AggregationFuncSelectror';
 
 //constants defined by actual data state
 export const DefaultFromTime: Date = new Date(2018, 3, 1, 0, 0, 0);
 export const DefaultToTime: Date = new Date(2018, 3, 14, 0, 0, 0);
 
-export enum HoursOrMinutes {
-    Hours = 0,
-    Minutes = 1,
-}
 
 export class DashboardModel {
 
@@ -28,14 +25,14 @@ export class DashboardModel {
 
     @observable canShowCharts: boolean;
 
-    @observable averagingStepHours: number = 1;
-    @observable averagingStepMins: number = 0;
-
     @observable plotWidth: number = 8;
     @observable plotHeight: number = 4;
     @observable lineWidth: number = 2;
 
     @observable dataSettingsModel: DataSettingsModel;
+    @observable aggregationFuncModel: AggregationFuncSelectrorModel;
+
+    @observable exportFileName: string;
 
     lineColor: rgbColor = { r: 50, g: 50, b: 200 };
 
@@ -46,6 +43,7 @@ export class DashboardModel {
         this.dateFrom = DefaultFromTime;
         this.dateTo = DefaultToTime;
         this.itemModels = [];
+        this.aggregationFuncModel = new AggregationFuncSelectrorModel();
         this.dataSettingsModel = new DataSettingsModel(apiRequest);
         this.loadDataSettingsModel();
     }
@@ -70,8 +68,8 @@ export class DashboardModel {
         if (this.dataSettingsModel.insertIntoExistingPlotIndex <= 0) {
             this.dataSettingsModel.insertIntoExistingPlotIndex = 0;
         }
-        if (this.dataSettingsModel.insertIntoExistingPlotIndex >= this.itemModels.length -1) {
-            this.dataSettingsModel.insertIntoExistingPlotIndex = this.itemModels.length -1;
+        if (this.dataSettingsModel.insertIntoExistingPlotIndex >= this.itemModels.length - 1) {
+            this.dataSettingsModel.insertIntoExistingPlotIndex = this.itemModels.length - 1;
         }
     }
 
@@ -89,28 +87,6 @@ export class DashboardModel {
     @action.bound
     clearDash() {
         this.itemModels = [];
-    }
-
-    @action.bound
-    averagingStepChanged(value: any, hoursMins: HoursOrMinutes = HoursOrMinutes.Hours) {
-        if (hoursMins === HoursOrMinutes.Hours) {
-            this.averagingStepHours = parseInt(value);
-            if (this.averagingStepHours <= 0) {
-                this.averagingStepHours = 0;
-            }
-            if (this.averagingStepHours >= 96) {
-                this.averagingStepHours = 96;
-            }
-        }
-        if (hoursMins === HoursOrMinutes.Minutes) {
-            this.averagingStepMins = parseInt(value);
-            if (this.averagingStepMins <= 0) {
-                this.averagingStepMins = 0;
-            }
-            if (this.averagingStepMins >= 59) {
-                this.averagingStepMins = 59;
-            }
-        }
     }
 
     @action.bound
@@ -168,35 +144,50 @@ export class DashboardModel {
         this.itemModels = this.ItemModels;
     }
 
-    @action.bound
-    async exportButtonClicked() {
-        await this.apiRequest.exportClicked();
+    public static getListOfMultiPlotParams(input: MultilinePlot[]): MultilinePlotParams[] {
+        const result: MultilinePlotParams[] = [];
+
+        input.forEach((i: MultilinePlot) => {
+            result.push({ plotParams: i.plots.map((j: SingleLinePlot) => j.plotParams) });
+        });
+
+        return result;
     }
 
     @action.bound
-    submitParams(newBlock: boolean)
-    {
+    exportFilenameChaged(value: string) {
+        if (value.length > 0) {
+            this.exportFileName = value;
+        }
+    }
+
+    @action.bound
+    async exportButtonClicked() {
+        const plotParams: MultilinePlot[] = [];
+        this.ItemModels.forEach(i => plotParams.push(i.data));
+        await this.apiRequest.postPdfExportParams(DashboardModel.getListOfMultiPlotParams(plotParams), this.exportFileName);
+    }
+
+    @action.bound
+    submitParams(newBlock: boolean) {
         this.removeRemovedItems();
         let dashboardItem = new DashboardItemModel(this.apiRequest);
         if (newBlock) {
             this.itemModels.push(dashboardItem);
         }
-        else if(this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length ){
+        else if (this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length) {
             dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
 
-        // let dashboardItem = new DashboardItemModel(this.apiRequest);
-        // debugger;
-        // this.itemModels.push(dashboardItem);
-
         const params: PlotParameters = {
+            aggrFunc: this.aggregationFuncModel.selectedFuncType,
             seriesParams: {
                 from: this.dateFrom.toLocaleString(),
                 to: this.dateTo.toLocaleString(),
                 line:
                 {
                     seriesName: this.dataSettingsModel.selectedSeries ? this.dataSettingsModel.selectedSeries : this.dataSettingsModel.SeriesNames[0],
-                    step: this.calculateStep(this.averagingStepHours, this.averagingStepMins),
+                    step: this.calculateStep(this.aggregationFuncModel.averagingStepHours, this.aggregationFuncModel.averagingStepMins),
                     measurementPlaceNumberId: this.dataSettingsModel.selectedMeaserementPlace.numberId,
                 }
             },
