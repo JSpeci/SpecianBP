@@ -179,6 +179,8 @@ export class DashboardModel {
             dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
 
+        dashboardItem.loading = true;
+
         const params: PlotParameters = {
             aggrFunc: this.aggregationFuncModel.selectedFuncType,
             seriesParams: {
@@ -203,7 +205,9 @@ export class DashboardModel {
         this.dataSettingsModel.lastUsedParams = params;
         this.dataSettingsModel.showSettings = false;
         //console.log(params);
-        dashboardItem.loadSerie(params).then(i => console.log(dashboardItem));
+        dashboardItem.loadSerie(params).then(i => dashboardItem.loading = false);
+        this.showSettingsPanel();
+        this.hideSettingsPanel();
     }
 
     @action.bound

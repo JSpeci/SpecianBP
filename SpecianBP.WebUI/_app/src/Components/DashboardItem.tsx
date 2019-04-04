@@ -15,7 +15,7 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
     render() {
         const model = this.props.model;
 
-        if (!model.loading && this.props.model.data) {
+        if (!model.loading && this.props.model.data.plots.length > 0) {
                         return (
                 <div className="dashboardItem">
                     <div className="dashboardItemHeader">
@@ -29,10 +29,12 @@ export class DashboardItem extends React.Component<DashboardItemProps> {
                         data={model.plotlyDataObject}
                         layout={{
                             xaxis: {
-                                title: model.lastUsedParams.chartProps.xAxisTitle
+                                title: model.lastUsedParams.chartProps.xAxisTitle,
+                                autorange: true,
                             },
                             yaxis: {
-                                title: model.lastUsedParams.chartProps.yAxisTitle
+                                title: model.lastUsedParams.chartProps.yAxisTitle,
+                                autorange: true,
                             },
                             width: model.lastUsedParams.chartProps.xSize * 100,
                             height: model.lastUsedParams.chartProps.ySize * 100,

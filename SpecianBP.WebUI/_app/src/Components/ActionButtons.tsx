@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { DashboardModel } from 'Models/DashboardModel';
+import { observer } from 'mobx-react';
 
 export interface ActionButtonsProps {
     model: DashboardModel;
 }
 
+@observer
 export class ActionButtons extends React.Component<ActionButtonsProps> {
 
     // getFileDefaultValue = () => {
