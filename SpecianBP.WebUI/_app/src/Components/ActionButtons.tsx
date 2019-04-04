@@ -20,6 +20,9 @@ export class ActionButtons extends React.Component<ActionButtonsProps> {
                 <div className="form-group settingsItem">
                     <button className="btn btn-warn inline-button" onClick={model.exportButtonClicked} type="button">Export</button >
                 </div>
+                <div className="form-group settingsItem">
+                    <input type="text" className="form-control" placeholder="fileName.pdf" defaultValue="PlotPdfExport.pdf" onChange={(e) => model.exportFilenameChaged(e.target.value)} />
+                </div>
             </div>
         );
         return actionButtons;

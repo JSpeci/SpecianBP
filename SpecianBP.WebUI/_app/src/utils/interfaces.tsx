@@ -1,3 +1,8 @@
+//INTERFACES
+
+/**
+ * Changes made here must be proven in structures on server side - this project has no model builder
+ */
 export interface SeriesAveraged {
     fromTime: any;
     toTime: any;
@@ -8,26 +13,36 @@ export interface SeriesAveraged {
     unit: string;
 }
 
-export interface SeriesLineParams{
+export interface SeriesLineParams {
     seriesName: string;
     step: any;
     measurementPlaceNumberId: number;
 }
 
-export interface SeriesParams{
+export interface SeriesParams {
     from: any;
     to: any;
     line: SeriesLineParams;
 }
 
-export interface MyPlotData {
+export interface MultilinePlot {
+    plots: SingleLinePlot[];
+}
+
+// multilinePlot without data - sending to server params
+export interface MultilinePlotParams {
+    plotParams: PlotParameters[];
+}
+
+export interface SingleLinePlot {
     data: SeriesAveraged[];
-    params: PlotParameters;
+    plotParams: PlotParameters;
 }
 
 export interface PlotParameters {
     seriesParams: SeriesParams;
     chartProps: ChartProps;
+    aggrFunc: string;
 }
 
 export interface TimeValuePair {
@@ -57,4 +72,10 @@ export interface rgbColor {
     r: number;
     g: number;
     b: number;
+}
+
+//ENUMS
+export enum HoursOrMinutes {
+    Hours,
+    Minutes,
 }
