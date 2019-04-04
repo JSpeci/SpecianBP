@@ -18,17 +18,18 @@ export class DashboardItemModel {
 
     @observable wasRemoved: boolean = false;
 
+    @observable canBeVisible: boolean = false;
 
     constructor(apiRequest: ApiRequest) {
-        this.loading = false;
+        this.loading = true;
         this.apiRequest = apiRequest;
         this.canShowChart = false;
         this.data = { plots: []};
     }
 
     @computed get plotlyDataObject() {
-        if (!this.loading && this.data) {
-
+        console.log("getting plot");
+        if (!this.loading && this.data.plots.length > 0) {
             const data = this.data.plots.map((d: SingleLinePlot) => {
                 let obj = {
                     type: d.plotParams.chartProps.type,
@@ -71,8 +72,9 @@ export class DashboardItemModel {
         this.loading = true;
         this.lastUsedParams = params;
         await this.apiRequest.getAveragedSeriesData(params)
-            .then(d => { this.data.plots.push({ data: d, plotParams: params}); this.loading = false; })
-            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data.plots[0].data[0].unit);
-        this.canShowChart = true;
+            .then(d => { this.data.plots.push({ data: d, plotParams: params});})
+            .then(d => this.lastUsedParams.chartProps.yAxisTitle = this.data.plots[0].data[0].unit).then(i => this.plotlyDataObject)
+            .then(() => this.canShowChart = true)
+            .then(i =>  this.loading = false );
     }
 }
