@@ -22,6 +22,7 @@ export interface SeriesLineParams {
 export interface SeriesParams {
     from: any;
     to: any;
+    step: any;
     line: SeriesLineParams;
 }
 

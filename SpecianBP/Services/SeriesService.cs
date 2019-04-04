@@ -40,7 +40,7 @@ namespace SpecianBP.Services
         /// <param name="Step"></param>
         /// <param name="SeriesName"></param>
         /// <returns></returns>
-        public IList GetAveraged(DateTime From, DateTime To, TimeSpan Step, string SeriesName, int MeasurementPlaceNumberId = 1)
+        public List<SeriesAveragedDto> GetAveraged(DateTime From, DateTime To, TimeSpan Step, string SeriesName, int MeasurementPlaceNumberId = 1)
         {
             string seriesUnit = GetSeriesUnit(SeriesName);
             // divide

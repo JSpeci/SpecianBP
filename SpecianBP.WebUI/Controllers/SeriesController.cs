@@ -74,15 +74,6 @@ namespace SpecianBP.WebUI.Controllers
             string plotPath = "C:\\Users\\King\\source\\repos\\MatplotlibTest\\MatplotlibTest\\MatplotlibCS\\matplotlib_cs.py";
             var matplotLibEngine = new MatplotlibCS.MatplotlibCS(pythonExe, plotPath);
 
-            //query series service to get data
-            //var result = _seriesService.GetAveraged(From, To, Step, SeriesName, MeasurementPlaceNumberId);
-
-            //fill approriate data structure List<List<SeriesAveraged>> ??
-
-            //map plot params into concrete matplotlib objects - code own mapper
-
-            //call matplotib and test it !
-
             var figure = _matplotLibParamsMappingService.getMatplotLibFigureFromPlotParams(plotParams, tempfolder + fileName);
             var t = matplotLibEngine.BuildFigure(figure);
             t.Wait();
