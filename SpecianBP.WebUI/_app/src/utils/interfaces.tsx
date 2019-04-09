@@ -14,7 +14,8 @@ export interface SeriesAveraged {
 }
 
 export interface SavedDashboardModel {
-    jSONparamas: string;
+    name: string;
+    jSONparamas: any;
     createdDate: any;
     createdBy: string;
 }

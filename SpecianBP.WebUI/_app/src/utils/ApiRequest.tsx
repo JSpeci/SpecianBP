@@ -1,4 +1,4 @@
-import { SeriesAveraged, PlotParameters, MeasurementPlace, MultilinePlot, MultilinePlotParams } from './interfaces';
+import { SeriesAveraged, PlotParameters, MeasurementPlace, MultilinePlot, MultilinePlotParams, SavedDashboardModel } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -76,7 +76,7 @@ export class ApiRequest {
         });
     }
 
-    saveDashboardMoel(params: MultilinePlotParams[], name: string = "SomethingSaved"): Promise<void> {
+    saveDashboardModel(params: MultilinePlotParams[], createdBy:string, name: string = "SomethingSaved"): Promise<void> {
 
         console.log("Saving",JSON.stringify(params));
 
@@ -89,7 +89,7 @@ export class ApiRequest {
             body: JSON.stringify(params)
         };
 
-        const queryParams = "?name=" + name;
+        const queryParams = "?name=" + name + "&createdBy=" + createdBy;
 
         return fetch('/api/Series/SaveDashboardModel' + queryParams, myInit).then((response) => {
             return response.json();
@@ -108,6 +108,22 @@ export class ApiRequest {
         };
 
         return fetch('/api/AdditionalData/AllSeriesNames', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
+    getSavedDashboards(): Promise<SavedDashboardModel[]> {
+
+        const myHeaders = this.getHeaders();
+
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/Series/SaveDashboardModels', myInit).then((response) => {
             return response.json();
         }).then((data) => {
             return data;

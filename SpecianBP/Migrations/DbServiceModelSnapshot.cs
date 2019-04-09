@@ -188,6 +188,8 @@ namespace SpecianBP.Migrations
 
                     b.Property<string>("JSONparamas");
 
+                    b.Property<string>("Name");
+
                     b.HasKey("Id");
 
                     b.ToTable("SavedDashboardModel");

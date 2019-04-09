@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using MatplotlibCS;
 using MatplotlibCS.PlotItems;
@@ -85,25 +86,45 @@ namespace SpecianBP.WebUI.Controllers
         }
 
         [HttpPost("SaveDashboardModel")]
-        public ActionResult SaveDashboardModel([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string name = "SomethingSaved")
+        public ActionResult SaveDashboardModel2([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string createdBy, [FromQuery] string name = "SomethingSaved")
         {
             if (plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(name))
             {
                 return BadRequest();
             }
 
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(MultilinePlotParams[]));
+            MemoryStream msObj = new MemoryStream();
+            js.WriteObject(msObj, plotParams);
+            msObj.Position = 0;
+            StreamReader sr = new StreamReader(msObj);
+            string json = sr.ReadToEnd().Replace("\\", "");
+            sr.Close();
+            msObj.Close();
 
-            using (StreamWriter sw = new StreamWriter(@"c:\json.txt"))
-            using (JsonWriter writer = new JsonTextWriter(sw))
+            _dbService.SavedDashboardModel.Add(new SavedDashboardModel()
             {
-                serializer.Serialize(writer, plotParams);
-                ;
-            }
+                CreatedBy = createdBy,
+                CreatedDate = DateTime.Now,
+                JSONparamas = json,
+                Name = name,
+            });
+
+            _dbService.SaveChanges();
 
             return Ok("saved");
+        }
+
+        [HttpGet("SaveDashboardModels")]
+        public ActionResult GetSaveDashboardModels()
+        {
+            var result = _dbService.SavedDashboardModel.ToList();
+            //foreach(var r in result)
+            //{
+            //    r.JSONparamas = r.JSONparamas.Replace("\\\"","\"");
+            //    ;
+            //}
+            return Ok(result);
         }
     }
 }

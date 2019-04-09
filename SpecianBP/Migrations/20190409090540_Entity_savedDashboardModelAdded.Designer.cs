@@ -10,7 +10,7 @@ using SpecianBP.Db;
 namespace SpecianBP.Migrations
 {
     [DbContext(typeof(DbService))]
-    [Migration("20190409081435_Entity_savedDashboardModelAdded")]
+    [Migration("20190409090540_Entity_savedDashboardModelAdded")]
     partial class Entity_savedDashboardModelAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,6 +189,8 @@ namespace SpecianBP.Migrations
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("JSONparamas");
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
