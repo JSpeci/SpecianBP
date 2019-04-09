@@ -76,6 +76,28 @@ export class ApiRequest {
         });
     }
 
+    saveDashboardMoel(params: MultilinePlotParams[], name: string = "SomethingSaved"): Promise<void> {
+
+        console.log("Saving",JSON.stringify(params));
+
+        var myInit = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        };
+
+        const queryParams = "?name=" + name;
+
+        return fetch('/api/Series/SaveDashboardModel' + queryParams, myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
     getPowerSeriesNamesList(): Promise<string[]> {
 
         const myHeaders = this.getHeaders();

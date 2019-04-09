@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MatplotlibCS;
 using MatplotlibCS.PlotItems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SpecianBP.Api;
 using SpecianBP.Api.Dto;
 using SpecianBP.Api.PlotExportModels;
@@ -63,7 +66,7 @@ namespace SpecianBP.WebUI.Controllers
         [HttpPost("Export")]
         public ActionResult Export([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string fileName = "PlotExportPdf.pdf")
         {
-            if(plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(fileName))
+            if (plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(fileName))
             {
                 return BadRequest();
             }
@@ -79,6 +82,28 @@ namespace SpecianBP.WebUI.Controllers
             t.Wait();
             Task.WaitAll(t);
             return Ok("exported");
+        }
+
+        [HttpPost("SaveDashboardModel")]
+        public ActionResult SaveDashboardModel([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string name = "SomethingSaved")
+        {
+            if (plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (StreamWriter sw = new StreamWriter(@"c:\json.txt"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, plotParams);
+                ;
+            }
+
+            return Ok("saved");
         }
     }
 }
