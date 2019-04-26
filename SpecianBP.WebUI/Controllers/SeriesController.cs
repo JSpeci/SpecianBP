@@ -2,12 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using MatplotlibCS;
 using MatplotlibCS.PlotItems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SpecianBP.Api;
 using SpecianBP.Api.Dto;
 using SpecianBP.Api.PlotExportModels;
@@ -63,9 +67,14 @@ namespace SpecianBP.WebUI.Controllers
         [HttpPost("Export")]
         public ActionResult Export([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string fileName = "PlotExportPdf.pdf")
         {
-            if(plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(fileName))
+            if (plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(fileName))
             {
                 return BadRequest();
+            }
+
+            if(!fileName.Contains(".pdf"))
+            {
+                fileName = fileName + ".pdf";
             }
 
             string tempfolder = System.IO.Path.GetTempPath();
@@ -79,6 +88,48 @@ namespace SpecianBP.WebUI.Controllers
             t.Wait();
             Task.WaitAll(t);
             return Ok("exported");
+        }
+
+        [HttpPost("SaveDashboardModel")]
+        public ActionResult SaveDashboardModel2([FromBody] MultilinePlotParams[] plotParams, [FromQuery] string createdBy, [FromQuery] string name = "SomethingSaved")
+        {
+            if (plotParams == null || plotParams.Length == 0 || string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(MultilinePlotParams[]));
+            MemoryStream msObj = new MemoryStream();
+            js.WriteObject(msObj, plotParams);
+            msObj.Position = 0;
+            StreamReader sr = new StreamReader(msObj);
+            string json = sr.ReadToEnd().Replace("\\", "");
+            sr.Close();
+            msObj.Close();
+
+            _dbService.SavedDashboardModel.Add(new SavedDashboardModel()
+            {
+                CreatedBy = createdBy,
+                CreatedDate = DateTime.Now,
+                JSONparamas = json,
+                Name = name,
+            });
+
+            _dbService.SaveChanges();
+
+            return Ok("saved");
+        }
+
+        [HttpGet("SaveDashboardModels")]
+        public ActionResult GetSaveDashboardModels()
+        {
+            var result = _dbService.SavedDashboardModel.ToList();
+            //foreach(var r in result)
+            //{
+            //    r.JSONparamas = r.JSONparamas.Replace("\\\"","\"");
+            //    ;
+            //}
+            return Ok(result);
         }
     }
 }
