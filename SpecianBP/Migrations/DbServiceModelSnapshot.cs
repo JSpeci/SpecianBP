@@ -177,6 +177,24 @@ namespace SpecianBP.Migrations
                     b.ToTable("Power");
                 });
 
+            modelBuilder.Entity("SpecianBP.Entities.SavedDashboardModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("JSONparamas");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SavedDashboardModel");
+                });
+
             modelBuilder.Entity("SpecianBP.Entities.SeriesUnit", b =>
                 {
                     b.Property<Guid>("Id")

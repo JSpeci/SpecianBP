@@ -13,6 +13,13 @@ export interface SeriesAveraged {
     unit: string;
 }
 
+export interface SavedDashboardModel {
+    name: string;
+    jSONparamas: any;
+    createdDate: any;
+    createdBy: string;
+}
+
 export interface SeriesLineParams {
     seriesName: string;
     step: any;

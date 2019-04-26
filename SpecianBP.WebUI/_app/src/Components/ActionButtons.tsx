@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { DashboardModel } from 'Models/DashboardModel';
+import { observer } from 'mobx-react';
+import { DropdownList } from 'react-widgets';
 
 export interface ActionButtonsProps {
     model: DashboardModel;
 }
 
+@observer
 export class ActionButtons extends React.Component<ActionButtonsProps> {
 
     // getFileDefaultValue = () => {
@@ -47,6 +50,30 @@ export class ActionButtons extends React.Component<ActionButtonsProps> {
                         <input type="text" className="form-control" placeholder="fileName.pdf" defaultValue={"PdfExportedReport.pdf"} onChange={(e) => model.exportFilenameChaged(e.target.value)} />
                     </div>
                 }
+                {
+                    model.ItemModels.length > 0 &&
+                    <div className="form-group settingsItem">
+                        <button className="btn btn-info inline-button" onClick={model.saveDashboardButtonClicked} type="button">Save Dashboard</button >
+                    </div>
+                }
+                {
+                    model.ItemModels.length > 0 &&
+                    <div className="form-group settingsItem exportFileNameInput">
+                        <input type="text" className="form-control" placeholder="name Of saved" defaultValue={"SomethingSaved"} onChange={(e) => model.exportFilenameChaged(e.target.value)} />
+                    </div>
+                }
+                {
+                    model.SavedConfigs.length > 0 &&
+                    <div className="form-group settingsItem">
+                        <label>Saved Dashboards</label>
+                        <DropdownList
+                            data={model.SavedConfigs}
+                            placeholder="select predefined dashboard"
+                            onChange={model.predefinedDashboardChanged}
+                        />
+                    </div>
+                }
+
             </div>
         );
         return actionButtons;

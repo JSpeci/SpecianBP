@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { ApiRequest } from 'utils/ApiRequest';
 import { DashboardItemModel } from './DashboardItemModel';
-import { PlotParameters, rgbColor, MultilinePlot, MultilinePlotParams, SingleLinePlot } from 'utils/interfaces';
+import { PlotParameters, rgbColor, MultilinePlot, MultilinePlotParams, SingleLinePlot, SavedDashboardModel } from 'utils/interfaces';
 import { DataSettingsModel } from './DataSettingsModel';
 import { AggregationFuncSelectrorModel } from '../Components/AggregationFuncSelectror';
 
@@ -34,6 +34,10 @@ export class DashboardModel {
 
     @observable exportFileName: string;
 
+
+    @observable saveName: string;
+    @observable savedConfigs: SavedDashboardModel[] = [];
+
     lineColor: rgbColor = { r: 50, g: 50, b: 200 };
 
     constructor(apiRequest: ApiRequest) {
@@ -46,11 +50,19 @@ export class DashboardModel {
         this.aggregationFuncModel = new AggregationFuncSelectrorModel();
         this.dataSettingsModel = new DataSettingsModel(apiRequest);
         this.loadDataSettingsModel();
+        this.loadSavedConfigs();
     }
 
     async loadDataSettingsModel() {
         this.loading = true;
         await this.dataSettingsModel.load().then(() => this.loading = false);
+    }
+
+
+    async loadSavedConfigs() {
+        this.loading = true;
+        await this.apiRequest.getSavedDashboards()
+            .then(d => { this.savedConfigs = d; this.loading = false; });
     }
 
     @computed get ItemModels(): DashboardItemModel[] {
@@ -162,10 +174,56 @@ export class DashboardModel {
     }
 
     @action.bound
+    saveNameChanged(value: string) {
+        if (value.length > 0) {
+            this.saveName = value;
+        }
+    }
+
+    @action.bound
     async exportButtonClicked() {
         const plotParams: MultilinePlot[] = [];
         this.ItemModels.forEach(i => plotParams.push(i.data));
         await this.apiRequest.postPdfExportParams(DashboardModel.getListOfMultiPlotParams(plotParams), this.exportFileName);
+    }
+
+    @action.bound
+    async saveDashboardButtonClicked() {
+        this.loading = true;
+        const plotParams: MultilinePlot[] = [];
+        this.ItemModels.forEach(i => plotParams.push(i.data));
+        await this.apiRequest.saveDashboardModel(DashboardModel.getListOfMultiPlotParams(plotParams), "someUser", this.exportFileName)
+            .then(i => this.loadSavedConfigs())
+            .then(i => this.loading = false);
+    }
+
+    @action.bound
+    predefinedDashboardChanged(value: any) {
+        let config = this.savedConfigs.find(i => i.name === value);
+        this.clearDash();
+        this.removeRemovedItems();
+        if (config !== undefined) {
+            let neco = JSON.stringify(config)
+                .replace(/\\/g, '')
+                .replace("]\"", "]")
+                .replace("\"[", "[");
+            let neco2 = JSON.parse(neco);
+            (neco2.jsoNparamas as MultilinePlotParams[]).forEach((i: MultilinePlotParams) => {
+                // console.log(i);
+                // console.log(i.plotParams.length);
+
+
+                //TO DO INSERTING
+
+            });
+        }
+    }
+
+    @computed get SavedConfigs(): string[] {
+        if (this.savedConfigs && this.savedConfigs.length > 0) {
+            return this.savedConfigs.map(i => i.name);
+        }
+        return [];
     }
 
     @action.bound
@@ -178,6 +236,8 @@ export class DashboardModel {
         else if (this.dataSettingsModel.insertIntoExistingPlotIndex < this.itemModels.length) {
             dashboardItem = this.itemModels[this.dataSettingsModel.insertIntoExistingPlotIndex];
         }
+
+        dashboardItem.loading = true;
 
         const params: PlotParameters = {
             aggrFunc: this.aggregationFuncModel.selectedFuncType,
@@ -203,7 +263,9 @@ export class DashboardModel {
         this.dataSettingsModel.lastUsedParams = params;
         this.dataSettingsModel.showSettings = false;
         //console.log(params);
-        dashboardItem.loadSerie(params).then(i => console.log(dashboardItem));
+        dashboardItem.loadSerie(params).then(i => dashboardItem.loading = false);
+        this.showSettingsPanel();
+        this.hideSettingsPanel();
     }
 
     @action.bound
