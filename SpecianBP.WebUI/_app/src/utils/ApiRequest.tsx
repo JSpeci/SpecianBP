@@ -139,7 +139,8 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/AdditionalData/GetSeriesUnit', myInit).then((response) => {
+        return fetch('/api/AdditionalData/GetSeriesUnit', myInit)
+        .then((response) => {
             return response.json();
         }).then((data) => {
             return data;
