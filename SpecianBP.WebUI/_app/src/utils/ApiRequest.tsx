@@ -1,4 +1,4 @@
-import { SeriesAveraged, PlotParameters, MeasurementPlace, MultilinePlot, MultilinePlotParams } from './interfaces';
+import { SeriesAveraged, PlotParameters, MeasurementPlace, MultilinePlot, MultilinePlotParams, SavedDashboardModel } from './interfaces';
 
 //helper object
 export class ApiRequest {
@@ -76,6 +76,28 @@ export class ApiRequest {
         });
     }
 
+    saveDashboardModel(params: MultilinePlotParams[], createdBy:string, name: string = "SomethingSaved"): Promise<void> {
+
+        console.log("Saving",JSON.stringify(params));
+
+        var myInit = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        };
+
+        const queryParams = "?name=" + name + "&createdBy=" + createdBy;
+
+        return fetch('/api/Series/SaveDashboardModel' + queryParams, myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
     getPowerSeriesNamesList(): Promise<string[]> {
 
         const myHeaders = this.getHeaders();
@@ -92,6 +114,22 @@ export class ApiRequest {
         });
     }
 
+    getSavedDashboards(): Promise<SavedDashboardModel[]> {
+
+        const myHeaders = this.getHeaders();
+
+        var myInit = {
+            method: 'GET',
+            headers: myHeaders
+        };
+
+        return fetch('/api/Series/SaveDashboardModels', myInit).then((response) => {
+            return response.json();
+        }).then((data) => {
+            return data;
+        });
+    }
+
     getSeriesUnit(seriesName: string): Promise<string> {
 
         const myHeaders = this.getHeaders();
@@ -101,7 +139,8 @@ export class ApiRequest {
             headers: myHeaders
         };
 
-        return fetch('/api/AdditionalData/GetSeriesUnit', myInit).then((response) => {
+        return fetch('/api/AdditionalData/GetSeriesUnit', myInit)
+        .then((response) => {
             return response.json();
         }).then((data) => {
             return data;
