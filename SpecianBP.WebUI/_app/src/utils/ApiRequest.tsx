@@ -47,9 +47,14 @@ export class ApiRequest {
             headers: myHeaders
         };
 
+        console.log(JSON.stringify(params));
+        
+
         return fetch('/api/Series/SingleSeriesAveraged', myInit).then((response) => {
+            
             return response.json();
         }).then((data) => {
+            console.log(JSON.stringify(data));
             return data;
         });
     }

@@ -77,6 +77,8 @@ namespace SpecianBP.WebUI.Controllers
                 fileName = fileName + ".pdf";
             }
 
+            string serialized = JsonConvert.SerializeObject(plotParams);
+
             string tempfolder = System.IO.Path.GetTempPath();
             tempfolder = "C:\\Users\\King\\Documents\\BP\\";
             string pythonExe = "C:\\Users\\King\\AppData\\Local\\Programs\\Python\\Python37\\python.exe";
