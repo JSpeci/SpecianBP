@@ -152,6 +152,25 @@ export class DashboardModel {
         return "1.00:00:00.000"; // one day
     }
 
+    private resolveStep(input: string): string {
+        let h = input.substring(2,input.length).split("H")[0];
+        let m = input.substring(2,input.length).split("H")[1].split("M")[0];
+        if(h === "")
+        {
+            h = "0";
+        }
+        if(m === "")
+        {
+            m = "0";
+        }
+        return this.calculateStep(parseInt(h), parseInt(m));
+    }
+
+    private resolveDateTime(input: string): string {
+        let d = new Date(parseInt(input.substr(6).split("+")[0]));
+        return d.toISOString();
+    }
+
     private removeRemovedItems() {
         this.itemModels = this.ItemModels;
     }
@@ -209,12 +228,39 @@ export class DashboardModel {
                 .replace("\"[", "[");
             let neco2 = JSON.parse(neco);
             (neco2.jsoNparamas as MultilinePlotParams[]).forEach((i: MultilinePlotParams) => {
-                // console.log(i);
-                // console.log(i.plotParams.length);
-
-
-                //TO DO INSERTING
-
+                let dashboardItem = new DashboardItemModel(this.apiRequest);
+                this.itemModels.push(dashboardItem);
+                dashboardItem.loading = true;
+                i.plotParams.forEach(pp => {
+                    debugger;
+                    const params: PlotParameters = {
+                        aggrFunc: pp.aggrFunc,
+                        seriesParams: {
+                            from: this.resolveDateTime(pp.seriesParams.from),
+                            to: this.resolveDateTime(pp.seriesParams.to),
+                            line:
+                            {
+                                seriesName: pp.seriesParams.line.seriesName,
+                                step: this.resolveStep(pp.seriesParams.line.step),
+                                measurementPlaceNumberId: pp.seriesParams.line.measurementPlaceNumberId,
+                            }
+                        },
+                        chartProps: {
+                            type: pp.chartProps.type,
+                            xSize: pp.chartProps.xSize,
+                            ySize: pp.chartProps.ySize,
+                            lineColor: pp.chartProps.lineColor,
+                            xAxisTitle: "Time",
+                            yAxisTitle: "",
+                            lineWidth: pp.chartProps.lineWidth
+                        },
+                    };
+                    this.dataSettingsModel.lastUsedParams = params;
+                    this.dataSettingsModel.showSettings = false;
+                    dashboardItem.loadSerie(params).then(i => dashboardItem.loading = false);
+                    this.showSettingsPanel();
+                    this.hideSettingsPanel();
+                });
             });
         }
     }
